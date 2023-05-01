@@ -1,7 +1,13 @@
+.MathJax {
+font-size: 1.2em !important;
+}
+
 #ruleset-box > * {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    max-width: 40vw;
 }
 
 #ruleset-table > table {
@@ -23,4 +29,26 @@
 
 input {
     width: 60px;
+}
+
+input[type="radio"] {
+    margin: 5px;
+}
+
+@media (max-width: 1500px) {
+    #ruleset-box > * {
+        max-width: 50vw;
+    }
+}
+
+@media (max-width: 1200px) {
+    #ruleset-box > * {
+        max-width: 70vw;
+    }
+}
+
+@media (max-width: 800px) {
+    #ruleset-box > * {
+        max-width: 90vw;
+    }
 }

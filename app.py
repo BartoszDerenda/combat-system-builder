@@ -5,7 +5,7 @@ from flask import session
 import random
 import uuid
 
-app = Flask(__name__, static_url_path='/static', static_folder='static', template_folder='templates')
+app = Flask(__name__)
 app.secret_key = '8008135'
 
 sessions = {}
@@ -235,6 +235,20 @@ def stat_sheet():
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
     system = sessions[session['key']]
+    game_state = 0
+
+    def battle_turn(token):
+        if token == 'Hero':
+            placeholder = 0
+        else:
+            placeholder = 0
+
+    def combatlog():
+        if game_state == 0:
+            if system.hero.speed >= system.enemy.speed:
+                battle_turn('Hero')
+            else:
+                battle_turn('Enemy')
 
     return render_template('simulation.html', system=system)
 

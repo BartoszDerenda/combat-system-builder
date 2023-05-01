@@ -3,12 +3,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/navigation.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/ruleset.css') }}" type="text/css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
 {% endblock %}
 
 {% block body %}
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
     <script>
     let v = 1
+    let str_min = document.getElementById('#str_min').value;
+    let str_max = document.getElementById('#str_max').value;
 
         function checkIfNotNumberOrNegativeOrEmpty(i) {
             if (isNaN(parseInt(i.value))) {
@@ -62,7 +74,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="strength_crit">Physical strike's critical multiplier value is</label>
+                        <label for="strength_crit">Physical strike's luckical multiplier value is</label>
                         <input type="number" id="strength_crit" name="strength_crit" step="any" value="{{ system.strength_crit }}"
                                onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                     </td>
@@ -96,7 +108,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="intelligence_crit">Magical attack's critical multiplier value is</label>
+                        <label for="intelligence_crit">Magical attack's luckical multiplier value is</label>
                         <input type="number" id="intelligence_crit" name="intelligence_crit" step="any" value="{{ system.intelligence_crit }}"
                                onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                     </td>
@@ -177,7 +189,8 @@
                 <tr>
                     <td>
                         <label for="agility_cap">Dodge chance is capped at</label>
-                        <input type="number" id="agility_cap" name="agility_cap" value="{{ system.agility_cap }}" />
+                        <input type="number" id="agility_cap" name="agility_cap" value="{{ system.agility_cap }}"
+                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                         %
                     </td>
                 </tr>
@@ -257,7 +270,8 @@
                 <tr>
                     <td>
                         <label for="willpower_cap">Resistance is capped at</label>
-                        <input type="number" id="willpower_cap" name="willpower_cap" value="{{ system.willpower_cap }}" />
+                        <input type="number" id="willpower_cap" name="willpower_cap" value="{{ system.willpower_cap }}"
+                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                         %
                     </td>
                 </tr>
@@ -320,25 +334,25 @@
                 <tr>
                     <td>
                         <input type="radio" id="charisma_b1" name="charisma_math" value="1" checked />
-                        <label for="charisma_b1">((Charisma / Opponent's level*2)*100)%</label>
+                        <label for="charisma_b1">$\Big($$Charisma \over Opponent's\;level \;*\; 2$ $*\; 100 \Big) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="radio" id="charisma_b2" name="charisma_math" value="2" />
-                        <label for="charisma_b2">((Charisma / Opponent's charisma*2)*100)%</label>
+                        <label for="charisma_b2">$(log_{3}(Charisma) * 10)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="radio" id="charisma_b3" name="charisma_math" value="3" />
-                        <label for="charisma_b3">(Charisma)%</label>
+                        <label for="charisma_b3">$(Charisma)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="charisma_cap">Charisma effect chance is capped at </label>
-                        <input type="number" id="charisma_cap" name="charisma_cap" step="any" value="{{ system.special_cap }}"
+                        <input type="number" id="charisma_cap" name="charisma_cap" step="any" value="{{ system.charisma_cap }}"
                                onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                         %
                     </td>
@@ -355,25 +369,25 @@
                 </tr>
                 <tr>
                     <td>
-                        Choose the mathematical formula that will calculate the charisma effect occurrence chance:
+                        Choose the mathematical formula that will calculate the critical hit chance:
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="radio" id="luck_a1" name="luck_math" value="1" checked />
-                        <label for="luck_a1">((Luck / Opponent's level*2)*100)%</label>
+                        <label for="luck_a1">$\Big($$Luck \over Opponent's\;level \;*\; 2$ $*\; 100 \Big) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="radio" id="luck_a2" name="luck_math" value="2" />
-                        <label for="luck_a2">((Luck / Opponent's luck*2)*100)%</label>
+                        <label for="luck_a2">$(log_{3}(Luck) * 10)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <input type="radio" id="luck_a3" name="luck_math" value="3" />
-                        <label for="luck_a3">(Luck)%</label>
+                        <label for="luck_a3">$(Luck)$%</label>
                     </td>
                 </tr>
                 <tr>
@@ -389,6 +403,60 @@
                         <label for="luck_price">Arbitrary value of each point of luck: </label>
                         <input type="number" id="luck_price" name="luck_price" step="any" value="{{ system.luck_price }}"
                                onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Speed</td>
+                </tr>
+                <tr>
+                    <td>
+                        Speed dictates the turn order. The formula is as follows:
+                    </td>
+                <tr>
+                    <td>
+                        $Speed \over Opponent's\;speed$
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        For example - if Hero has 300 speed and the Opponent has 100 speed,
+                        he will be able to make use of three turns for every single turn of the opponent.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Armor</td>
+                </tr>
+                <tr>
+                    <td>
+                        Armor decreases the damage taken from opponent's attacks.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Choose the mathematical formula that will calculate the effectiveness of the armor:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="armor_a1" name="armor_math" value="1" checked />
+                        <label for="armor_a1">$Armor \over Armor + 100$%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="armor_a2" name="armor_math" value="2" />
+                        <label for="armor_a2">$(log_{3}(Armor) * 10)$%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="armor_a3" name="armor_math" value="3" />
+                        <label for="armor_a3">$Flat\;damage\;reduction\;$</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Flat damage reduction means that each point of armor will reduce one damage taken from opponent's attacks.
                     </td>
                 </tr>
             </table>
