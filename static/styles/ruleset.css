@@ -1,0 +1,26 @@
+#ruleset-box > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#ruleset-table > table {
+    border: 10px ridge rgb(169, 169, 169);
+    background-color: rgb(229, 229, 229);
+    padding: 3.5%;
+}
+
+.category-name-first {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.category-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-top: 5%;
+}
+
+input {
+    width: 60px;
+}

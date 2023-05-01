@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('20_derenda/static', filename='styles/base.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('20_derenda/static', filename='styles/navigation.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('20_derenda/static', filename='styles/simulation.css') }}" type="text/css" />
+{% endblock %}
+
+{% block body %}
+
+    <div id="navigation">
+        <div class="nav-box">
+            <a href="{{ url_for('ruleset') }}" class="nav-text">Ruleset</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('stat_sheet') }}" class="nav-text">Stat sheet</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('simulation') }}" class="nav-text current-page">< Simulation ></a>
+        </div>
+    </div>
+
+{% endblock %}

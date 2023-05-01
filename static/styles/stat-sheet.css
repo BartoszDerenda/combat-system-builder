@@ -1,0 +1,91 @@
+#stat-sheet-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr 1fr;
+    grid-template-rows: 1fr 0.2fr;
+    grid-column-gap: 0;
+    grid-row-gap: 0;
+}
+
+#stat-sheet-grid > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-stat-sheet-table {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.enemy-stat-sheet-table {
+    grid-area: 1 / 3 / 2 / 4;
+}
+
+table {
+    padding: 3.5%;
+}
+
+td {
+    width: 165px;
+}
+
+input {
+    width: 125px;
+}
+
+.hero-stat-sheet-table > table {
+    border: 10px ridge rgb(29, 221, 255);
+    background-color: rgb(176, 241, 255);
+}
+
+.hero-td-category {
+    background-color: rgb(100, 231, 255);
+    padding: 0 0 0 5%;
+}
+
+.hero-td-value {
+    background-color: rgb(141, 235, 255);
+    padding: 0 0 0 5%;
+}
+
+.enemy-stat-sheet-table > table {
+    border: 10px ridge rgb(255, 134, 62);
+    background-color: rgb(255, 184, 142);
+}
+
+.enemy-td-category {
+    background-color: rgb(255, 137, 80);
+    padding: 0 0 0 5%;
+}
+
+.enemy-td-value {
+    background-color: rgb(255, 163, 105);
+    padding: 0 0 0 5%;
+}
+
+.confirm-btn {
+    grid-area: 2 / 1 / 3 / 4;
+    margin-top: 10%;
+}
+
+@media (max-width: 700px) {
+    #stat-sheet-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, 1fr) 0.3fr;
+        grid-column-gap: 0;
+        grid-row-gap: 0;
+    }
+    .hero-stat-sheet-table {
+        grid-area: 1 / 1 / 2 / 2;
+        margin-top: 5%;
+        margin-bottom: 10%;
+    }
+
+    .enemy-stat-sheet-table {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .confirm-btn {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+}

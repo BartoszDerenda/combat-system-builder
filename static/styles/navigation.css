@@ -1,0 +1,51 @@
+#navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.4em;
+    margin-top: 2.5%;
+    margin-bottom: 1.5%;
+}
+
+.nav-box {
+    text-align: center;
+    width: 15vw;
+    margin-bottom: 4.5%;
+}
+
+.nav-dot {
+    text-align: center;
+    width: 2vh;
+
+    cursor: default;
+    user-select: none;
+}
+
+.current-page {
+    font-size: 1.1em;
+    color: #000000;
+    font-weight: bold;
+}
+
+@media (max-width: 1200px) {
+    #navigation {
+        flex-direction: column;
+    }
+
+    .nav-box {
+        width: 30vw;
+        margin: 7% 0 7% 0;
+    }
+
+    .nav-dot {
+        display: none;
+    }
+}
+
+@media (max-width: 700px) {
+    .nav-box {
+        width: 40vw;
+        margin: 7% 0 7% 0;
+    }
+}

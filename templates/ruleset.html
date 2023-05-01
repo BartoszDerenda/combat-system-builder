@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navigation.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/ruleset.css') }}" type="text/css" />
+{% endblock %}
+
+{% block body %}
+
+    <script>
+    let v = 1
+
+        function checkIfNotNumberOrNegativeOrEmpty(i) {
+            if (isNaN(parseInt(i.value))) {
+                i.value=v;
+            }
+            else if(i.value <= 1) {
+                i.value=1;
+            }
+            else if (i.value === null) {
+                i.value=1;
+            }
+            else
+                v=i.value;
+        }
+    </script>
+
+    <div id="navigation">
+        <div class="nav-box">
+            <a href="{{ url_for('ruleset') }}" class="nav-text current-page">< Ruleset ></a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('stat_sheet') }}" class="nav-text">Stat sheet</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('simulation') }}" class="nav-text">Simulation</a>
+        </div>
+    </div>
+
+    <form id="ruleset-box" method="POST" action="{{ url_for('ruleset') }}">
+        <div id="ruleset-table">
+            <table>
+                <tr>
+                    <td class="category-name-first">Strength</td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="strength_dmg">Each point of strength increases physical damage dealt by a value of</label>
+                        <input type="number" id="strength_dmg" name="strength_dmg" value="{{ system.strength_dmg }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="strength_min">Physical damage spread ranges in between</label>
+                        <input type="number" id="strength_min" name="strength_min" step="any" value="{{ system.strength_min }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <label for="strength_max"> and </label>
+                        <input type="number" id="strength_max" name="strength_max" step="any" value="{{ system.strength_max }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="strength_crit">Physical strike's critical multiplier value is</label>
+                        <input type="number" id="strength_crit" name="strength_crit" step="any" value="{{ system.strength_crit }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="strength_price">Arbitrary value of each point of strength: </label>
+                        <input type="number" id="strength_price" name="strength_price" step="any" value="{{ system.strength_price }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Intelligence</td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="intelligence_dmg">Each point of intelligence increases magical damage dealt by a value of</label>
+                        <input type="number" id="intelligence_dmg" name="intelligence_dmg" value="{{ system.intelligence_dmg }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="intelligence_min">Magical damage spread ranges in between</label>
+                        <input type="number" id="intelligence_min" name="intelligence_min" step="any" value="{{ system.intelligence_min }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <label for="intelligence_max"> and </label>
+                        <input type="number" id="intelligence_max" name="intelligence_max" step="any" value="{{ system.intelligence_max }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="intelligence_crit">Magical attack's critical multiplier value is</label>
+                        <input type="number" id="intelligence_crit" name="intelligence_crit" step="any" value="{{ system.intelligence_crit }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="intelligence_price">Arbitrary value of each point of intelligence: </label>
+                        <input type="number" id="intelligence_price" name="intelligence_price" step="any" value="{{ system.intelligence_price }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Agility</td>
+                </tr>
+                <tr>
+                    <td>
+                        Agility increases your chance to dodge...
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_a1" name="agility_type" value="physical" checked />
+                        <label for="agility_a1">Physical attacks</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_a2" name="agility_type" value="magical" />
+                        <label for="agility_a2">Magical attacks</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Dodge chance is based off the difference between...
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_b1" name="agility_versus" value="agility_vs_level" checked />
+                        <label for="agility_b1">Agility v.s. opponent's level</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_b2" name="agility_versus" value="agility_vs_strength" />
+                        <label for="agility_b2">Agility v.s. opponent's strength</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_b3" name="agility_versus" value="agility_vs_agility" />
+                        <label for="agility_b3">Agility v.s. opponent's agility</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Choose the mathematical formula that will calculate the dodge chance of a character:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_c1" name="agility_math" value="1" checked />
+                        <label for="agility_c1">((Agility / Opponent's attribute) * 100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_c2" name="agility_math" value="2" />
+                        <label for="agility_c2">((Agility / Opponent's attribute) * 100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="agility_c3" name="agility_math" value="3" />
+                        <label for="agility_c3">((Agility / Opponent's attribute) * 100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="agility_cap">Dodge chance is capped at</label>
+                        <input type="number" id="agility_cap" name="agility_cap" value="{{ system.agility_cap }}" />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="agility_price">Arbitrary value of each point of agility: </label>
+                        <input type="number" id="agility_price" name="agility_price" step="any" value="{{ system.agility_price }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Willpower</td>
+                </tr>
+                <tr>
+                    <td>
+                        Willpower increases your resistance against...
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_a1" name="willpower_type" value="magical" checked />
+                        <label for="willpower_a1">Magical attacks</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_a2" name="willpower_type" value="physical" />
+                        <label for="willpower_a2">Physical attacks</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Resistance is based off the difference between...
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_b1" name="willpower_versus" value="willpower_vs_level" checked />
+                        <label for="willpower_b1">Willpower v.s. opponent's level</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_b2" name="willpower_versus" value="willpower_vs_intelligence" />
+                        <label for="willpower_b2">Willpower v.s. opponent's intelligence</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_b3" name="willpower_versus" value="willpower_vs_willpower" />
+                        <label for="willpower_b3">Willpower v.s. opponent's willpower</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Choose the mathematical formula that will calculate the dodge chance of a character:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_c1" name="willpower_math" value="1" checked />
+                        <label for="willpower_c1">((Willpower / Opponent's attribute) * 100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_c2" name="willpower_math" value="2" />
+                        <label for="willpower_c2">((Willpower / Opponent's attribute) * 100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_c3" name="willpower_math" value="3" />
+                        <label for="willpower_c3">((Willpower / Opponent's attribute) * 100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="willpower_cap">Resistance is capped at</label>
+                        <input type="number" id="willpower_cap" name="willpower_cap" value="{{ system.willpower_cap }}" />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="willpower_price">Arbitrary value of each point of willpower: </label>
+                        <input type="number" id="willpower_price" name="willpower_price" step="any" value="{{ system.willpower_price }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Endurance</td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="base_health">Base health of all characters is </label>
+                        <input type="number" id="base_health" name="base_health" step="any" value="{{ system.base_health }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="endurance_value">Each point of endurance increases character's health pool by </label>
+                        <input type="number" id="endurance_value" name="endurance_value" step="any" value="{{ system.endurance_value }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="endurance_price">Arbitrary value of each point of endurance: </label>
+                        <input type="number" id="endurance_price" name="endurance_price" step="any" value="{{ system.endurance_price }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Charisma</td>
+                </tr>
+                <tr>
+                    <td>
+                        Charisma increases a chance to...
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="charisma_a1" name="charisma_effect" value="charisma_buff" checked />
+                        <label for="charisma_a1">Decrease damage of enemy's next attack / increase damage of your next attack</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="charisma_a2" name="charisma_effect" value="charisma_special" />
+                        <label for="charisma_a2">Activate a special attack</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Choose the mathematical formula that will calculate the charisma effect occurrence chance:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="charisma_b1" name="charisma_math" value="1" checked />
+                        <label for="charisma_b1">((Charisma / Opponent's level*2)*100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="charisma_b2" name="charisma_math" value="2" />
+                        <label for="charisma_b2">((Charisma / Opponent's charisma*2)*100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="charisma_b3" name="charisma_math" value="3" />
+                        <label for="charisma_b3">(Charisma)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="charisma_cap">Charisma effect chance is capped at </label>
+                        <input type="number" id="charisma_cap" name="charisma_cap" step="any" value="{{ system.special_cap }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="charisma_price">Arbitrary value of each point of charisma: </label>
+                        <input type="number" id="charisma_price" name="charisma_price" step="any" value="{{ system.charisma_price }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Luck</td>
+                </tr>
+                <tr>
+                    <td>
+                        Choose the mathematical formula that will calculate the charisma effect occurrence chance:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="luck_a1" name="luck_math" value="1" checked />
+                        <label for="luck_a1">((Luck / Opponent's level*2)*100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="luck_a2" name="luck_math" value="2" />
+                        <label for="luck_a2">((Luck / Opponent's luck*2)*100)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="luck_a3" name="luck_math" value="3" />
+                        <label for="luck_a3">(Luck)%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="luck_cap">Luck critical hit chance is capped at </label>
+                        <input type="number" id="luck_cap" name="luck_cap" step="any" value="{{ system.luck_cap }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="luck_price">Arbitrary value of each point of luck: </label>
+                        <input type="number" id="luck_price" name="luck_price" step="any" value="{{ system.luck_price }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="confirm-btn">
+            <input type="submit" id="submit" value="Confirm">
+        </div>
+    </form>
+
+{% endblock %}

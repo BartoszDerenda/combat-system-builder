@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('20_derenda/static', filename='styles/base.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('20_derenda/static', filename='styles/navigation.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('20_derenda/static', filename='styles/stat-sheet.css') }}" type="text/css" />
+{% endblock %}
+
+{% block body %}
+
+    <script>
+    let v = 1
+
+        function checkIfNotNumberOrNegativeOrEmpty(i) {
+            if (isNaN(parseInt(i.value))) {
+                i.value=v;
+            }
+            else if(i.value <= 1) {
+                i.value=1;
+            }
+            else if (i.value === null) {
+                i.value=1;
+            }
+            else
+                v=i.value;
+        }
+    </script>
+
+    <div id="navigation">
+        <div class="nav-box">
+            <a href="{{ url_for('ruleset') }}" class="nav-text">Ruleset</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('stat_sheet') }}" class="nav-text current-page">< Stat sheet ></a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('simulation') }}" class="nav-text">Simulation</a>
+        </div>
+    </div>
+
+    <form id="stat-sheet-grid" method="POST" action="{{ url_for('stat_sheet') }}">
+        <div class="hero-stat-sheet-table">
+            <table>
+                <tr>
+                    <td colspan="2"><label for="hero_name">Name</label></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="text" id="hero_name" name="hero_name" value="{{ system.hero.name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_lvl">Level</label></td>
+                    <td><input type="number" id="hero_lvl" name="hero_lvl" value="{{ system.hero.level }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_str">Strength</label></td>
+                    <td><input type="number" id="hero_str" name="hero_str" value="{{ system.hero.strength }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_int">Intelligence</label></td>
+                    <td><input type="number" id="hero_int" name="hero_int" value="{{ system.hero.intelligence }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_agi">Agility</label></td>
+                    <td><input type="number" id="hero_agi" name="hero_agi" value="{{ system.hero.agility }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_will">Willpower</label></td>
+                    <td><input type="number" id="hero_will" name="hero_will" value="{{ system.hero.willpower }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_end">Endurance</label></td>
+                    <td><input type="number" id="hero_end" name="hero_end" value="{{ system.hero.endurance }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_char">Charisma</label></td>
+                    <td><input type="number" id="hero_char" name="hero_char" value="{{ system.hero.charisma }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_lck">Luck</label></td>
+                    <td><input type="number" id="hero_lck" name="hero_lck" value="{{ system.hero.luck }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_spd">Speed</label></td>
+                    <td><input type="number" id="hero_spd" name="hero_spd" value="{{ system.hero.speed }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_armor">Armor</label></td>
+                    <td><input type="number" id="hero_armor" name="hero_armor" value="{{ system.hero.armor }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Physical attack: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.physical_min }} - {{ system.hero.physical_max }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Magical attack: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.magical_min }} - {{ system.hero.magical_max }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Dodge chance: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.dodge_chance }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Magic resistance: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.magic_resistance }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Total hitpoints: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.hitpoints }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Charisma effect: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.charisma_chance }}% for {{ system.hero.charisma_min }}% - {{ system.hero.charisma_max }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Critical chance: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.critical_chance }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Haste: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.haste }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hero-td-category">
+                        <p>Armor mitigation: </p>
+                    </td>
+                    <td class="hero-td-value">
+                        {{ system.hero.armor_mitigation }}%
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="enemy-stat-sheet-table">
+            <table>
+                <tr>
+                    <td colspan="2"><label for="enemy_name">Name</label></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="text" id="enemy_name" name="enemy_name" value="{{ system.enemy.name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_lvl">Level</label></td>
+                    <td><input type="number" id="enemy_lvl" name="enemy_lvl" value="{{ system.enemy.level }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_str">Strength</label></td>
+                    <td><input type="number" id="enemy_str" name="enemy_str" value="{{ system.enemy.strength }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_int">Intelligence</label></td>
+                    <td><input type="number" id="enemy_int" name="enemy_int" value="{{ system.enemy.intelligence }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_agi">Agility</label></td>
+                    <td><input type="number" id="enemy_agi" name="enemy_agi" value="{{ system.enemy.agility }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_will">Willpower</label></td>
+                    <td><input type="number" id="enemy_will" name="enemy_will" value="{{ system.enemy.willpower }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_end">Endurance</label></td>
+                    <td><input type="number" id="enemy_end" name="enemy_end" value="{{ system.enemy.endurance }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_char">Charisma</label></td>
+                    <td><input type="number" id="enemy_char" name="enemy_char" value="{{ system.enemy.charisma }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_lck">Luck</label></td>
+                    <td><input type="number" id="enemy_lck" name="enemy_lck" value="{{ system.enemy.luck }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_spd">Speed</label></td>
+                    <td><input type="number" id="enemy_spd" name="enemy_spd" value="{{ system.enemy.speed }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_armor">Armor</label></td>
+                    <td><input type="number" id="enemy_armor" name="enemy_armor" value="{{ system.enemy.armor }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Physical attack: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.physical_min }} - {{ system.enemy.physical_max }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Magical attack: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.magical_min }} - {{ system.enemy.magical_max }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Dodge chance: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.dodge_chance }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Magic resistance: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.magic_resistance }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Total hitpoints: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.hitpoints }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Charisma effect: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.charisma_chance }}% for {{ system.enemy.charisma_min }}% - {{ system.enemy.charisma_max }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Critical chance: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.critical_chance }}%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Haste: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.haste }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="enemy-td-category">
+                        <p>Armor mitigation: </p>
+                    </td>
+                    <td class="enemy-td-value">
+                        {{ system.enemy.armor_mitigation }}%
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="confirm-btn">
+            <input type="submit" name="stats_update" id="submit" value="Confirm">
+        </div>
+    </form>
+
+{% endblock %}

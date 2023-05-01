@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+    color: #2a2a2a;
+    font-size: 1em;
+}
+
+body {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+label:hover, #submit:hover, .nav-text:hover {
+    cursor: pointer;
+}
