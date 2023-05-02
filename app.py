@@ -33,7 +33,7 @@ class Fighter:
         self.magical_min = 0
         self.magical_max = 0
         self.dodge_chance = 0
-        self.magic_resistance = 0
+        self.resistance = 0
         self.hitpoints = 0
         self.charisma_chance = 0
         self.charisma_min = 0
@@ -63,12 +63,14 @@ class System:
         self.agility_type = "physical"
         self.agility_versus = 1
         self.agility_math = 1
+        self.agility_math_multiplier = 3
         self.agility_cap = 33
         self.agility_price = 1
 
         self.willpower_type = "magical"
         self.willpower_versus = 1
         self.willpower_math = 1
+        self.willpower_math_multiplier = 2
         self.willpower_cap = 50
         self.willpower_price = 1
 
@@ -76,7 +78,6 @@ class System:
         self.endurance_value = 10
         self.endurance_price = 3
 
-        self.charisma_effect = "charisma_buff"
         self.charisma_math = 1
         self.charisma_cap = 33
         self.charisma_price = 1
@@ -84,6 +85,12 @@ class System:
         self.luck_calculation = 1
         self.luck_cap = 50
         self.luck_price = 1
+
+        self.speed_price = 3
+
+        self.armor_type = "physical and magical"
+        self.armor_math = 1
+        self.armor_price = 2
 
 
 def set_stats():

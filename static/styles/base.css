@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    color: #2a2a2a;
+    color: #e5e8f5;
     font-size: 1em;
 }
 
@@ -10,6 +10,7 @@ body {
     justify-content: center;
     align-items: center;
 
+    background-color: #33385b;
     margin: 0;
 }
 

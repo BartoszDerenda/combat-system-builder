@@ -11,8 +11,8 @@ font-size: 1.2em !important;
 }
 
 #ruleset-table > table {
-    border: 10px ridge rgb(169, 169, 169);
-    background-color: rgb(229, 229, 229);
+    border: 10px ridge rgb(73, 78, 98);
+    background-color: rgb(47, 50, 86);
     padding: 3.5%;
 }
 
@@ -24,15 +24,20 @@ font-size: 1.2em !important;
 .category-name {
     font-size: 1.2em;
     font-weight: bold;
-    padding-top: 5%;
+    padding-top: 15%;
 }
 
 input {
-    width: 60px;
+    width: 80px;
+    background-color: #33385b;
 }
 
 input[type="radio"] {
     margin: 5px;
+}
+
+.small-padding-top {
+    padding-top: 30px;
 }
 
 @media (max-width: 1500px) {

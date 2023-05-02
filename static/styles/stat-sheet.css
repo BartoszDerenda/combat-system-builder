@@ -30,35 +30,36 @@ td {
 
 input {
     width: 125px;
+    background-color: #33385b;
 }
 
 .hero-stat-sheet-table > table {
-    border: 10px ridge rgb(29, 221, 255);
-    background-color: rgb(176, 241, 255);
+    border: 10px ridge rgb(73, 78, 98);
+    background-color: rgb(47, 50, 86);
 }
 
 .hero-td-category {
-    background-color: rgb(100, 231, 255);
+    background-color: rgb(33, 35, 59);
     padding: 0 0 0 5%;
 }
 
 .hero-td-value {
-    background-color: rgb(141, 235, 255);
+    background-color: rgb(38, 41, 79);
     padding: 0 0 0 5%;
 }
 
 .enemy-stat-sheet-table > table {
-    border: 10px ridge rgb(255, 134, 62);
-    background-color: rgb(255, 184, 142);
+    border: 10px ridge rgb(47, 50, 86);
+    background-color: rgb(73, 78, 98);
 }
 
 .enemy-td-category {
-    background-color: rgb(255, 137, 80);
+    background-color: rgb(55, 59, 75);
     padding: 0 0 0 5%;
 }
 
 .enemy-td-value {
-    background-color: rgb(255, 163, 105);
+    background-color: rgb(46, 52, 70);
     padding: 0 0 0 5%;
 }
 
