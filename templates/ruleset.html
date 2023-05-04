@@ -129,20 +129,32 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_a1" name="agility_type" value="physical" checked />
-                        <label for="agility_a1">Physical attacks</label>
+                        <input type="radio" id="agility_type_1" name="agility_type" value="physical"
+                        {% if system.agility_type == "physical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="agility_type_1">Physical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_a2" name="agility_type" value="magical" />
-                        <label for="agility_a2">Magical attacks</label>
+                        <input type="radio" id="agility_type_2" name="agility_type" value="magical"
+                        {% if system.agility_type == "magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="agility_type_2">Magical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_a3" name="agility_type" value="both" />
-                        <label for="agility_a3">Physical and magical attacks</label>
+                        <input type="radio" id="agility_type_3" name="agility_type" value="physical and magical"
+                        {% if system.agility_type == "physical and magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="agility_type_3">Physical and magical attacks</label>
                     </td>
                 </tr>
                 <tr>
@@ -152,38 +164,58 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_b1" name="agility_math" value="1" checked />
-                        <label for="agility_b1">$\Big($$Agility \over Opponent's\;strength \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="agility_math_1" name="agility_math" value="1"
+                        {% if system.agility_math == 1 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="agility_math_1">$\Big($$Agility \over X \;*\; Y$ $*\; 100 \Big) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_b2" name="agility_math" value="2" />
-                        <label for="agility_b2">$\Big($$Agility \over Opponent's\;level \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="agility_math_2" name="agility_math" value="2"
+                        {% if system.agility_math == 2 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="agility_math_2">$((Agility - X) * Y) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_b3" name="agility_math" value="3" />
-                        <label for="agility_b3">$\Big($$Agility \over Opponent's\;agility \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="agility_math_3" name="agility_math" value="3"
+                        {% if system.agility_math == 3 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="agility_math_3">$(log_{3}(Agility) * 10)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_b4" name="agility_math" value="4" />
-                        <label for="agility_b4">$\Big($$Agility \over Opponent's\;agility \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="agility_math_4" name="agility_math" value="4"
+                        {% if system.agility_math == 4 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="agility_math_4">$(Agility)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="agility_b5" name="agility_math" value="5" />
-                        <label for="agility_b5">$(Agility)$%</label>
+                        <label for="agility_x">Where X equals to opponent's </label>
+                        <select type="number" id="agility_x" name="agility_x">
+                            <option value="strength" {% if system.agility_x == "strength" %} selected {% endif %} >Strength</option>
+                            <option value="level" {% if system.agility_x == "level" %} selected {% endif %}>Level</option>
+                            <option value="agility" {% if system.agility_x == "agility" %} selected {% endif %} >Agility</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="agility_math_multiplier">Where X is equal to </label>
-                        <input type="number" id="agility_math_multiplier" name="agility_math_multiplier" value="{{ system.agility_math_multiplier }}"
+                        <label for="agility_yr">And Y equals to </label>
+                        <input type="number" id="agility_y" name="agility_y" value="{{ system.agility_y }}"
                         onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                     </td>
                 </tr>
@@ -217,61 +249,93 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_a1" name="willpower_type" value="magical" checked />
-                        <label for="willpower_a1">Magical attacks</label>
+                        <input type="radio" id="willpower_type_1" name="willpower_type" value="magical"
+                        {% if system.willpower_type == "magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_type_1">Magical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_a2" name="willpower_type" value="physical" />
-                        <label for="willpower_a2">Physical attacks</label>
+                        <input type="radio" id="willpower_type_2" name="willpower_type" value="physical"
+                        {% if system.willpower_type == "physical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_type_2">Physical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_a3" name="willpower_type" value="both" />
-                        <label for="willpower_a3">Magical and physical attacks</label>
+                        <input type="radio" id="willpower_type_3" name="willpower_type" value="physical and magical"
+                        {% if system.willpower_type == "physical and magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_type_3">Magical and physical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        Choose the mathematical formula that will calculate the dodge chance of a character:
+                        Choose the mathematical formula that will calculate the resistance of a character:
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_b1" name="willpower_math" value="1" checked />
-                        <label for="willpower_b1">$\Big($$Willpower \over Opponent's\;intelligence \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="willpower_math_1" name="willpower_math" value="1"
+                        {% if system.willpower_math == 1 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_math_1">$\Big($$Willpower \over X \;*\; Y$ $*\; 100 \Big) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_b2" name="willpower_math" value="2" />
-                        <label for="willpower_b2">$\Big($$Willpower \over Opponent's\;level \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="willpower_math_2" name="willpower_math" value="2"
+                        {% if system.willpower_math == 2 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_math_2">$((Willpower - X) * Y) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_b3" name="willpower_math" value="3" />
-                        <label for="willpower_b3">$\Big($$Willpower \over Opponent's\;willpower \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="willpower_math_3" name="willpower_math" value="3"
+                        {% if system.willpower_math == 3 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_math_3">$(log_{3}(Willpower) * 10)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_b4" name="willpower_math" value="4" />
-                        <label for="willpower_b4">$\Big($$Willpower \over Opponent's\;willpower \;*\; X$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="willpower_math_4" name="willpower_math" value="4"
+                        {% if system.willpower_math == 4 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_math_4">$(Willpower)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_b5" name="willpower_math" value="5" />
-                        <label for="willpower_b5">$(Willpower)$%</label>
+                        <label for="willpower_x">Where X equals to opponent's </label>
+                        <select type="number" id="willpower_x" name="willpower_x">
+                            <option value="intelligence" {% if system.willpower_x == "intelligence" %} selected {% endif %} >Intelligence</option>
+                            <option value="level" {% if system.willpower_x == "level" %} selected {% endif %} >Level</option>
+                            <option value="willpower" {% if system.willpower_x == "willpower" %} selected {% endif %} >Willpower</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="willpower_math_multiplier">Where X is equal to </label>
-                        <input type="number" id="willpower_math_multiplier" name="willpower_math_multiplier" value="{{ system.willpower_math_multiplier }}"
+                        <label for="willpower_y">And Y equals to </label>
+                        <input type="number" id="willpower_y" name="willpower_y" value="{{ system.willpower_y }}"
                         onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                     </td>
                 </tr>
@@ -337,24 +401,75 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="charisma_b1" name="charisma_math" value="1" checked />
-                        <label for="charisma_b1">$\Big($$Charisma \over Opponent's\;level \;*\; 2$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="charisma_math_1" name="charisma_math" value="1"
+                        {% if system.charisma_math == 1 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="charisma_math_1">$\Big($$Charisma \over X \;*\; Y$ $*\; 100 \Big) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="charisma_b2" name="charisma_math" value="2" />
-                        <label for="charisma_b2">$(log_{3}(Charisma) * 10)$%</label>
+                        <input type="radio" id="charisma_math_2" name="charisma_math" value="2"
+                        {% if system.charisma_math == 2 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="charisma_math_2">$((Charisma - X) * Y) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="charisma_b3" name="charisma_math" value="3" />
-                        <label for="charisma_b3">$(Charisma)$%</label>
+                        <input type="radio" id="charisma_math_3" name="charisma_math" value="3"
+                        {% if system.charisma_math == 3 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="charisma_math_3">$(log_{3}(Charisma) * 10)$%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="charisma_math_4" name="charisma_math" value="4"
+                        {% if system.charisma_math == 4 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="charisma_math_4">$(Charisma)$%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="charisma_x">Where X equals to opponent's </label>
+                        <select type="number" id="charisma_x" name="charisma_x">
+                            <option value="level" {% if system.charisma_x == "level" %} selected {% endif %} >Level</option>
+                            <option value="charisma" {% if system.charisma_x == "charisma" %} selected {% endif %} >Charisma</option>
+                            <option value="luck" {% if system.charisma_x == "luck" %} selected {% endif %} >Luck</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="charisma_y">And Y equals to </label>
+                        <input type="number" id="charisma_y" name="charisma_y" value="{{ system.charisma_y }}"
+                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
+                        <label for="charisma_min">Charisma effect ranges in strength between </label>
+                        <input type="number" id="charisma_min" name="charisma_min" step="any" value="{{ system.charisma_min }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        %
+                        <label for="charisma_max">and </label>
+                        <input type="number" id="charisma_max" name="charisma_max" step="any" value="{{ system.charisma_max }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        %
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <label for="charisma_cap">Charisma effect chance is capped at </label>
                         <input type="number" id="charisma_cap" name="charisma_cap" step="any" value="{{ system.charisma_cap }}"
                                onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
@@ -398,20 +513,59 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="luck_a1" name="luck_math" value="1" checked />
-                        <label for="luck_a1">$\Big($$Luck \over Opponent's\;level \;*\; 2$ $*\; 100 \Big) $%</label>
+                        <input type="radio" id="luck_math_1" name="luck_math" value="1"
+                        {% if system.luck_math == 1 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="luck_math_1">$\Big($$Luck \over X \;*\; Y$ $*\; 100 \Big) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="luck_a2" name="luck_math" value="2" />
-                        <label for="luck_a2">$(log_{3}(Luck) * 10)$%</label>
+                        <input type="radio" id="luck_math_2" name="luck_math" value="2"
+                        {% if system.luck_math == 2 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="luck_math_2">$((Luck - X) * Y) $%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="luck_a3" name="luck_math" value="3" />
-                        <label for="luck_a3">$(Luck)$%</label>
+                        <input type="radio" id="luck_math_3" name="luck_math" value="3"
+                        {% if system.luck_math == 3 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="luck_math_3">$(log_{3}(Luck) * 10)$%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="luck_math_4" name="luck_math" value="4"
+                        {% if system.luck_math == 4 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="luck_math_4">$(Luck)$%</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="luck_x">Where X equals to opponent's </label>
+                        <select type="number" id="luck_x" name="luck_x">
+                            <option value="level" {% if system.luck_x == "level" %} selected {% endif %} >Level</option>
+                            <option value="luck" {% if system.luck_x == "luck" %} selected {% endif %} >Luck</option>
+                            <option value="charisma" {% if system.luck_x == "charisma" %} selected {% endif %} >Charisma</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="luck_y">And Y equals to </label>
+                        <input type="number" id="luck_y" name="luck_y" value="{{ system.luck_y }}"
+                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
                     </td>
                 </tr>
                 <tr>
@@ -475,20 +629,32 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_a1" name="armor_type" value="physical and magical" checked />
-                        <label for="armor_a1">Physical and magical attacks</label>
+                        <input type="radio" id="armor_type_1" name="armor_type" value="physical and magical"
+                        {% if system.armor_type == "physical and magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="armor_type_1">Physical and magical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_a2" name="armor_type" value="physical" />
-                        <label for="armor_a2">Physical attacks</label>
+                        <input type="radio" id="armor_type_2" name="armor_type" value="physical"
+                        {% if system.armor_type == "physical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="armor_type_2">Physical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_a3" name="armor_type" value="magical" />
-                        <label for="armor_a3">Magical attacks</label>
+                        <input type="radio" id="armor_type_3" name="armor_type" value="magical"
+                        {% if system.armor_type == "magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="armor_type_3">Magical attacks</label>
                     </td>
                 </tr>
                 <tr>
@@ -498,20 +664,32 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_b1" name="armor_math" value="1" checked />
-                        <label for="armor_b1">$Armor \over Armor \;+\; 100$%</label>
+                        <input type="radio" id="armor_math_1" name="armor_math" value="1"
+                        {% if system.armor_math == 1 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="armor_math_1">$Armor \over Armor \;+\; 100$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_b2" name="armor_math" value="2" />
-                        <label for="armor_b2">$(log_{3}(Armor) * 10)$%</label>
+                        <input type="radio" id="armor_math_2" name="armor_math" value="2"
+                        {% if system.armor_math == 2 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="armor_math_2">$(log_{3}(Armor) * 10)$%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_b3" name="armor_math" value="3" />
-                        <label for="armor_b3">$Flat\;damage\;reduction\;$</label>
+                        <input type="radio" id="armor_math_3" name="armor_math" value="3"
+                        {% if system.armor_math == 3 %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="armor_math_3">$Flat\;damage\;reduction\;$</label>
                     </td>
                 </tr>
                 <tr>
@@ -530,7 +708,7 @@
         </div>
 
         <div class="confirm-btn">
-            <input type="submit" id="submit" value="Confirm">
+            <input type="submit" name="ruleset_update" id="submit" value="Confirm">
         </div>
     </form>
 

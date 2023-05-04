@@ -36,6 +36,10 @@ input[type="radio"] {
     margin: 5px;
 }
 
+select {
+    background-color: #33385b;
+}
+
 .small-padding-top {
     padding-top: 30px;
 }

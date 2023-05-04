@@ -61,28 +61,34 @@ class System:
         self.intelligence_price = 2
 
         self.agility_type = "physical"
-        self.agility_versus = 1
         self.agility_math = 1
-        self.agility_math_multiplier = 3
+        self.agility_x = "strength"
+        self.agility_y = 3
         self.agility_cap = 33
         self.agility_price = 1
 
         self.willpower_type = "magical"
-        self.willpower_versus = 1
         self.willpower_math = 1
-        self.willpower_math_multiplier = 2
+        self.willpower_x = "intelligence"
+        self.willpower_y = 2
         self.willpower_cap = 50
         self.willpower_price = 1
 
-        self.base_health = 100
+        self.base_health = 200
         self.endurance_value = 10
         self.endurance_price = 3
 
         self.charisma_math = 1
+        self.charisma_x = "level"
+        self.charisma_y = 3
+        self.charisma_min = 15
+        self.charisma_max = 35
         self.charisma_cap = 33
         self.charisma_price = 1
 
-        self.luck_calculation = 1
+        self.luck_math = 1
+        self.luck_x = "level"
+        self.luck_y = 2
         self.luck_cap = 50
         self.luck_price = 1
 
@@ -209,6 +215,258 @@ def set_stats():
         system.enemy.armor = 1
 
 
+def set_ruleset():
+    system = sessions[session['key']]
+
+    # Setting all the ruleset rules
+
+    #
+    # STRENGTH
+    #
+    if request.form.get("strength_dmg") != '' and int(request.form.get("strength_dmg")) > 0:
+        system.strength_dmg = int(request.form.get("strength_dmg"))
+    else:
+        system.strength_dmg = 3
+
+    if request.form.get("strength_min") != '' and float(request.form.get("strength_min")) > 0:
+        system.strength_min = float(request.form.get("strength_min"))
+    else:
+        system.strength_min = 0.9
+
+    if request.form.get("strength_max") != '' and float(request.form.get("strength_max")) > 0:
+        system.strength_max = float(request.form.get("strength_max"))
+    else:
+        system.strength_max = 1.1
+
+    if system.strength_min > system.strength_max:
+        temp = system.strength_min
+        system.strength_min = system.strength_max
+        system.strength_max = temp
+
+    if request.form.get("strength_crit") != '' and float(request.form.get("strength_crit")) > 0:
+        system.strength_crit = float(request.form.get("strength_crit"))
+    else:
+        system.strength_crit = 1.5
+
+    if request.form.get("strength_price") != '' and int(request.form.get("strength_price")) > 0:
+        system.strength_price = int(request.form.get("strength_price"))
+    else:
+        system.strength_price = 2
+
+    #
+    # INTELLIGENCE
+    #
+    if request.form.get("intelligence_dmg") != '' and int(request.form.get("intelligence_dmg")) > 0:
+        system.intelligence_dmg = int(request.form.get("intelligence_dmg"))
+    else:
+        system.intelligence_dmg = 3
+
+    if request.form.get("intelligence_min") != '' and float(request.form.get("intelligence_min")) > 0:
+        system.intelligence_min = float(request.form.get("intelligence_min"))
+    else:
+        system.intelligence_min = 0.9
+
+    if request.form.get("intelligence_max") != '' and float(request.form.get("intelligence_max")) > 0:
+        system.intelligence_max = float(request.form.get("intelligence_max"))
+    else:
+        system.intelligence_max = 1.1
+
+    if system.intelligence_min > system.intelligence_max:
+        temp = system.intelligence_min
+        system.intelligence_min = system.intelligence_max
+        system.intelligence_max = temp
+
+    if request.form.get("intelligence_crit") != '' and float(request.form.get("intelligence_crit")) > 0:
+        system.intelligence_crit = float(request.form.get("intelligence_crit"))
+    else:
+        system.intelligence_crit = 1.5
+
+    if request.form.get("intelligence_price") != '' and int(request.form.get("intelligence_price")) > 0:
+        system.intelligence_price = int(request.form.get("intelligence_price"))
+    else:
+        system.intelligence_price = 2
+
+    #
+    # AGILITY
+    #
+    if request.form.get("agility_type") != '':
+        system.agility_type = str(request.form.get("agility_type"))
+    else:
+        system.agility_type = "physical"
+
+    if request.form.get("agility_math") != '':
+        system.agility_math = int(request.form.get("agility_math"))
+    else:
+        system.agility_math = 1
+
+    if request.form.get("agility_x") != '':
+        system.agility_x = str(request.form.get("agility_x"))
+    else:
+        system.agility_x = "strength"
+
+    if request.form.get("agility_y") != '' and int(request.form.get("agility_y")) > 0:
+        system.agility_y = int(request.form.get("agility_y"))
+    else:
+        system.agility_y = 3
+
+    if request.form.get("agility_cap") != '' and int(request.form.get("agility_cap")) > 0:
+        system.agility_cap = int(request.form.get("agility_cap"))
+    else:
+        system.agility_cap = 33
+
+    if request.form.get("agility_price") != '' and int(request.form.get("agility_price")) > 0:
+        system.agility_price = int(request.form.get("agility_price"))
+    else:
+        system.agility_price = 1
+
+    #
+    # WILLPOWER
+    #
+    if request.form.get("willpower_type") != '':
+        system.willpower_type = str(request.form.get("willpower_type"))
+    else:
+        system.willpower_type = "physical"
+
+    if request.form.get("willpower_math") != '':
+        system.willpower_math = int(request.form.get("willpower_math"))
+    else:
+        system.willpower_math = 1
+
+    if request.form.get("willpower_x") != '':
+        system.willpower_x = str(request.form.get("willpower_x"))
+    else:
+        system.willpower_x = "intelligence"
+
+    if request.form.get("willpower_y") != '' and int(request.form.get("willpower_y")) > 0:
+        system.willpower_y = int(request.form.get("willpower_y"))
+    else:
+        system.willpower_y = 3
+
+    if request.form.get("willpower_cap") != '' and int(request.form.get("willpower_cap")) > 0:
+        system.willpower_cap = int(request.form.get("willpower_cap"))
+    else:
+        system.willpower_cap = 50
+
+    if request.form.get("willpower_price") != '' and int(request.form.get("willpower_price")) > 0:
+        system.willpower_price = int(request.form.get("willpower_price"))
+    else:
+        system.willpower_price = 1
+
+    #
+    # ENDURANCE
+    #
+    if request.form.get("base_health") != '' and int(request.form.get("base_health")) >= 0:
+        system.base_health = int(request.form.get("base_health"))
+    else:
+        system.base_health = 200
+
+    if request.form.get("endurance_value") != '' and int(request.form.get("endurance_value")) > 0:
+        system.endurance_value = int(request.form.get("endurance_value"))
+    else:
+        system.endurance_value = 10
+
+    if request.form.get("endurance_price") != '' and int(request.form.get("endurance_price")) > 0:
+        system.endurance_price = int(request.form.get("endurance_price"))
+    else:
+        system.endurance_price = 3
+
+    #
+    # CHARISMA
+    #
+    if request.form.get("charisma_math") != '':
+        system.charisma_math = int(request.form.get("charisma_math"))
+    else:
+        system.charisma_math = 1
+
+    if request.form.get("charisma_x") != '':
+        system.charisma_x = str(request.form.get("charisma_x"))
+    else:
+        system.charisma_x = "level"
+
+    if request.form.get("charisma_y") != '' and int(request.form.get("charisma_y")) > 0:
+        system.charisma_y = int(request.form.get("charisma_y"))
+    else:
+        system.charisma_y = 3
+
+    if request.form.get("charisma_min") != '' and int(request.form.get("charisma_min")) > 0:
+        system.charisma_min = int(request.form.get("charisma_min"))
+    else:
+        system.charisma_min = 15
+
+    if request.form.get("charisma_max") != '' and int(request.form.get("charisma_max")) > 0:
+        system.charisma_max = int(request.form.get("charisma_max"))
+    else:
+        system.charisma_max = 35
+
+    if system.charisma_min > system.charisma_max:
+        temp = system.charisma_min
+        system.charisma_min = system.charisma_max
+        system.charisma_max = temp
+
+    if request.form.get("charisma_cap") != '' and int(request.form.get("charisma_cap")) > 0:
+        system.charisma_cap = int(request.form.get("charisma_cap"))
+    else:
+        system.charisma_cap = 33
+
+    if request.form.get("charisma_price") != '' and int(request.form.get("charisma_price")) > 0:
+        system.charisma_price = int(request.form.get("charisma_price"))
+    else:
+        system.charisma_price = 1
+
+    #
+    # LUCK
+    #
+    if request.form.get("luck_math") != '':
+        system.luck_math = int(request.form.get("luck_math"))
+    else:
+        system.luck_math = 1
+
+    if request.form.get("luck_x") != '':
+        system.luck_x = str(request.form.get("luck_x"))
+    else:
+        system.luck_x = "level"
+
+    if request.form.get("luck_y") != '' and int(request.form.get("luck_y")) > 0:
+        system.luck_y = int(request.form.get("luck_y"))
+    else:
+        system.luck_y = 2
+
+    if request.form.get("luck_cap") != '' and int(request.form.get("luck_cap")) > 0:
+        system.luck_cap = int(request.form.get("luck_cap"))
+    else:
+        system.luck_cap = 50
+
+    if request.form.get("luck_price") != '' and int(request.form.get("luck_price")) > 0:
+        system.luck_price = int(request.form.get("luck_price"))
+    else:
+        system.luck_price = 1
+
+    #
+    # SPEED
+    #
+    if request.form.get("speed_price") != '' and int(request.form.get("speed_price")) > 0:
+        system.speed_price = int(request.form.get("speed_price"))
+    else:
+        system.speed_price = 3
+
+    #
+    # ARMOR
+    #
+    if request.form.get("armor_type") != '':
+        system.armor_type = str(request.form.get("armor_type"))
+    else:
+        system.armor_type = "physical and magical"
+
+    if request.form.get("armor_math") != '':
+        system.armor_math = int(request.form.get("armor_math"))
+    else:
+        system.armor_math = 1
+
+    if request.form.get("armor_price") != '' and int(request.form.get("armor_price")) > 0:
+        system.armor_price = int(request.form.get("armor_price"))
+    else:
+        system.armor_price = 3
+
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
     if 'key' not in session:
@@ -223,7 +481,8 @@ def ruleset():
     system = sessions[session['key']]
 
     if request.method == 'POST':
-        placehorder = 0
+        if request.form.get('ruleset_update', False) == 'Confirm':
+            set_ruleset()
 
     return render_template('ruleset.html', system=system)
 
