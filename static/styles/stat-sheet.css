@@ -33,9 +33,17 @@ input {
     background-color: #33385b;
 }
 
+.small-padding-top {
+    padding-top: 30px;
+}
+
+.small-padding-bottom {
+    padding-bottom: 30px;
+}
+
 .hero-stat-sheet-table > table {
-    border: 10px ridge rgb(73, 78, 98);
-    background-color: rgb(47, 50, 86);
+    background-color: rgb(73, 78, 98);
+    border: 10px ridge rgb(47, 50, 86);
 }
 
 .hero-td-category {
@@ -49,17 +57,17 @@ input {
 }
 
 .enemy-stat-sheet-table > table {
-    border: 10px ridge rgb(47, 50, 86);
-    background-color: rgb(73, 78, 98);
+    background-color: rgb(55, 63, 82);
+    border: 10px ridge rgb(61, 66, 101);
 }
 
 .enemy-td-category {
-    background-color: rgb(55, 59, 75);
+    background-color: rgb(33, 35, 59);
     padding: 0 0 0 5%;
 }
 
 .enemy-td-value {
-    background-color: rgb(46, 52, 70);
+    background-color: rgb(38, 41, 79);
     padding: 0 0 0 5%;
 }
 

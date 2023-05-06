@@ -19,4 +19,10 @@
         </div>
     </div>
 
+    <div id="simulation-box">
+        {% for line in combatlog %}
+            <p>{{ line|safe }}</p>
+        {% endfor %}
+    </div>
+
 {% endblock %}

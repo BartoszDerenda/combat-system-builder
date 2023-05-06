@@ -97,6 +97,16 @@
                                onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
                 </tr>
                 <tr>
+                    <td class="small-padding-top"><label for="hero_likelihood_of_physical">Likelihood of using a physical attack:</label></td>
+                    <td class="small-padding-top"><input type="number" id="hero_likelihood_of_physical" name="hero_likelihood_of_physical" value="{{ system.hero.likelihood_of_physical }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" max="100" required />%</td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="hero_likelihood_of_magical">Likelihood of using a magical attack:</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="hero_likelihood_of_magical" name="hero_likelihood_of_magical" value="{{ system.hero.likelihood_of_magical }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" max="100" required />%</td>
+                </tr>
+                <tr>
                     <td class="hero-td-category">
                         <p>Physical attack: </p>
                     </td>
@@ -117,7 +127,7 @@
                         <p>Dodge chance: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.dodge_chance }}%
+                        {{ system.hero.dodge_chance }} %
                     </td>
                 </tr>
                 <tr>
@@ -125,7 +135,7 @@
                         <p>Resistance: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.resistance }}%
+                        {{ system.hero.resistance }} %
                     </td>
                 </tr>
                 <tr>
@@ -141,7 +151,7 @@
                         <p>Charisma effect: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.charisma_chance }}% for {{ system.hero.charisma_min }}% - {{ system.hero.charisma_max }}%
+                        {{ system.hero.charisma_chance }} %
                     </td>
                 </tr>
                 <tr>
@@ -149,7 +159,7 @@
                         <p>Critical chance: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.critical_chance }}%
+                        {{ system.hero.critical_chance }} %
                     </td>
                 </tr>
                 <tr>
@@ -157,7 +167,7 @@
                         <p>Haste: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.haste }}
+                        {{ system.hero.speed }}
                     </td>
                 </tr>
                 <tr>
@@ -165,7 +175,10 @@
                         <p>Armor mitigation: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.armor_mitigation }}%
+                        {{ system.hero.armor_mitigation }}
+                        {% if system.armor_math != 4 %}
+                            %
+                        {% endif %}
                     </td>
                 </tr>
             </table>
@@ -230,6 +243,16 @@
                                onblur="checkIfNotNumberOrNegativeOrEmpty(this)" /></td>
                 </tr>
                 <tr>
+                    <td class="small-padding-top"><label for="enemy_likelihood_of_physical">Likelihood of using a physical attack:</label></td>
+                    <td class="small-padding-top"><input type="number" id="enemy_likelihood_of_physical" name="enemy_likelihood_of_physical" value="{{ system.enemy.likelihood_of_physical }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" max="100" required />%</td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="enemy_likelihood_of_magical">Likelihood of using a magical attack:</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="enemy_likelihood_of_magical" name="enemy_likelihood_of_magical" value="{{ system.enemy.likelihood_of_magical }}"
+                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" max="100" required />%</td>
+                </tr>
+                <tr>
                     <td class="enemy-td-category">
                         <p>Physical attack: </p>
                     </td>
@@ -250,7 +273,7 @@
                         <p>Dodge chance: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.dodge_chance }}%
+                        {{ system.enemy.dodge_chance }} %
                     </td>
                 </tr>
                 <tr>
@@ -258,7 +281,7 @@
                         <p>Magic resistance: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.magic_resistance }}%
+                        {{ system.enemy.resistance }} %
                     </td>
                 </tr>
                 <tr>
@@ -274,7 +297,7 @@
                         <p>Charisma effect: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.charisma_chance }}% for {{ system.enemy.charisma_min }}% - {{ system.enemy.charisma_max }}%
+                        {{ system.enemy.charisma_chance }} %
                     </td>
                 </tr>
                 <tr>
@@ -282,7 +305,7 @@
                         <p>Critical chance: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.critical_chance }}%
+                        {{ system.enemy.critical_chance }} %
                     </td>
                 </tr>
                 <tr>
@@ -290,7 +313,7 @@
                         <p>Haste: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.haste }}
+                        {{ system.enemy.speed }}
                     </td>
                 </tr>
                 <tr>
@@ -298,7 +321,10 @@
                         <p>Armor mitigation: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.armor_mitigation }}%
+                        {{ system.enemy.armor_mitigation }}
+                        {% if system.armor_math != 4 %}
+                            %
+                        {% endif %}
                     </td>
                 </tr>
             </table>

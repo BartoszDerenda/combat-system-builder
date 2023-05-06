@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import session
+import math
 import random
 import uuid
 
@@ -27,6 +28,8 @@ class Fighter:
         self.luck = 1
         self.speed = 1
         self.armor = 1
+        self.likelihood_of_physical = 50
+        self.likelihood_of_magical = 50
 
         self.physical_min = 0
         self.physical_max = 0
@@ -36,10 +39,7 @@ class Fighter:
         self.resistance = 0
         self.hitpoints = 0
         self.charisma_chance = 0
-        self.charisma_min = 0
-        self.charisma_max = 0
         self.critical_chance = 0
-        self.haste = 0
         self.armor_mitigation = 0
 
 
@@ -96,7 +96,72 @@ class System:
 
         self.armor_type = "physical and magical"
         self.armor_math = 1
+        self.armor_y = 100
+        self.armor_cap = 75
         self.armor_price = 2
+
+
+def math_type_chooser(attribute_x):
+    system = sessions[session['key']]
+    if attribute_x == "level":
+        x = system.enemy.level
+    elif attribute_x == "strength":
+        x = system.enemy.strength
+    elif attribute_x == "intelligence":
+        x = system.enemy.intelligence
+    elif attribute_x == "agility":
+        x = system.enemy.agility
+    elif attribute_x == "willpower":
+        x = system.enemy.willpower
+    elif attribute_x == "endurance":
+        x = system.enemy.endurance
+    elif attribute_x == "charisma":
+        x = system.enemy.charisma
+    elif attribute_x == "luck":
+        x = system.enemy.luck
+    elif attribute_x == "speed":
+        x = system.enemy.speed
+    elif attribute_x == "armor":
+        x = system.enemy.armor
+    else:
+        x = system.enemy.level
+    return x
+
+
+def attribute_calculator(attribute, attribute_math, attribute_x, attribute_y):
+    if attribute_math == 1:
+        effect_chance = round(
+            ((attribute / (math_type_chooser(attribute_x) * attribute_y)) * 100), 1)
+    elif attribute_math == 2:
+        effect_chance = round(
+            ((attribute / (attribute + attribute_y)) * 100), 1)
+    elif attribute_math == 3:
+        effect_chance = round(
+            ((attribute - math_type_chooser(attribute_x)) * attribute_y), 1)
+    elif attribute_math == 4:
+        effect_chance = round(
+            (math.log(attribute, attribute_y) * 10), 1)
+    elif attribute_math == 5:
+        effect_chance = attribute
+    else:
+        effect_chance = 0
+
+    return effect_chance
+
+
+def armor_calculator(attribute, attribute_math, attribute_y):
+    if attribute_math == 1:
+        armor_mitigation = round(
+            ((attribute / (attribute + attribute_y)) * 100), 1)
+    elif attribute_math == 2:
+        armor_mitigation = round(
+            (math.log(attribute, attribute_y) * 10), 1)
+    elif attribute_math == 3 or attribute_math == 4:
+        armor_mitigation = attribute
+    else:
+        armor_mitigation = 0
+
+    return armor_mitigation
 
 
 def set_stats():
@@ -158,6 +223,17 @@ def set_stats():
     else:
         system.hero.armor = 1
 
+    if request.form.get("hero_likelihood_of_physical") != '' and int(
+            request.form.get("hero_likelihood_of_physical")) > 0:
+        system.hero.likelihood_of_physical = int(request.form.get("hero_likelihood_of_physical"))
+    else:
+        system.hero.likelihood_of_physical = 50
+
+    if request.form.get("hero_likelihood_of_magical") != '' and int(request.form.get("hero_likelihood_of_magical")) > 0:
+        system.hero.likelihood_of_magical = int(request.form.get("hero_likelihood_of_magical"))
+    else:
+        system.hero.likelihood_of_magical = 50
+
     # Enemy statistics
     if request.form.get("enemy_name") != '':
         system.enemy.name = str(request.form.get("enemy_name"))
@@ -213,6 +289,86 @@ def set_stats():
         system.enemy.armor = int(request.form.get("enemy_armor"))
     else:
         system.enemy.armor = 1
+
+    if request.form.get("enemy_likelihood_of_physical") != '' and int(
+            request.form.get("enemy_likelihood_of_physical")) > 0:
+        system.enemy.likelihood_of_physical = int(request.form.get("enemy_likelihood_of_physical"))
+    else:
+        system.enemy.likelihood_of_physical = 50
+
+    if request.form.get("enemy_likelihood_of_magical") != '' and int(
+            request.form.get("enemy_likelihood_of_magical")) > 0:
+        system.enemy.likelihood_of_magical = int(request.form.get("enemy_likelihood_of_magical"))
+    else:
+        system.enemy.likelihood_of_magical = 50
+
+    # Hero extras
+    system.hero.physical_min = round(system.hero.strength * system.strength_dmg * system.strength_min)
+    system.hero.physical_max = round(system.hero.strength * system.strength_dmg * system.strength_max)
+
+    system.hero.magical_min = round(system.hero.intelligence * system.intelligence_dmg * system.intelligence_min)
+    system.hero.magical_max = round(system.hero.intelligence * system.intelligence_dmg * system.intelligence_max)
+
+    system.hero.dodge_chance = attribute_calculator(system.hero.agility, system.agility_math, system.agility_x,
+                                                    system.agility_y)
+    if system.hero.dodge_chance > system.agility_cap:
+        system.hero.dodge_chance = system.agility_cap
+
+    system.hero.resistance = attribute_calculator(system.hero.willpower, system.willpower_math, system.willpower_x,
+                                                  system.willpower_y)
+    if system.hero.resistance > system.willpower_cap:
+        system.hero.resistance = system.willpower_cap
+
+    system.hero.hitpoints = system.base_health + (system.hero.endurance * system.endurance_value)
+
+    system.hero.charisma_chance = attribute_calculator(system.hero.charisma, system.charisma_math, system.charisma_x,
+                                                       system.charisma_y)
+    if system.hero.charisma_chance > system.charisma_cap:
+        system.hero.charisma_chance = system.charisma_cap
+
+    system.hero.critical_chance = attribute_calculator(system.hero.luck, system.luck_math, system.luck_x,
+                                                       system.luck_y)
+    if system.hero.critical_chance > system.luck_cap:
+        system.hero.critical_chance = system.luck_cap
+
+    system.hero.armor_mitigation = armor_calculator(system.hero.armor, system.armor_math, system.armor_y)
+    if system.armor_math != 4:
+        if system.hero.armor_mitigation > system.armor_cap:
+            system.hero.armor_mitigation = system.armor_cap
+
+    # Hero extras
+    system.enemy.physical_min = round(system.enemy.strength * system.strength_dmg * system.strength_min)
+    system.enemy.physical_max = round(system.enemy.strength * system.strength_dmg * system.strength_max)
+
+    system.enemy.magical_min = round(system.enemy.intelligence * system.intelligence_dmg * system.intelligence_min)
+    system.enemy.magical_max = round(system.enemy.intelligence * system.intelligence_dmg * system.intelligence_max)
+
+    system.enemy.dodge_chance = attribute_calculator(system.enemy.agility, system.agility_math, system.agility_x,
+                                                     system.agility_y)
+    if system.enemy.dodge_chance > system.agility_cap:
+        system.enemy.dodge_chance = system.agility_cap
+
+    system.enemy.resistance = attribute_calculator(system.enemy.willpower, system.willpower_math, system.willpower_x,
+                                                   system.willpower_y)
+    if system.enemy.resistance > system.willpower_cap:
+        system.enemy.resistance = system.willpower_cap
+
+    system.enemy.hitpoints = system.base_health + (system.enemy.endurance * system.endurance_value)
+
+    system.enemy.charisma_chance = attribute_calculator(system.enemy.charisma, system.charisma_math, system.charisma_x,
+                                                        system.charisma_y)
+    if system.enemy.charisma_chance > system.charisma_cap:
+        system.enemy.charisma_chance = system.charisma_cap
+
+    system.enemy.critical_chance = attribute_calculator(system.enemy.luck, system.luck_math, system.luck_x,
+                                                        system.luck_y)
+    if system.enemy.critical_chance > system.luck_cap:
+        system.enemy.critical_chance = system.luck_cap
+
+    system.enemy.armor_mitigation = armor_calculator(system.enemy.armor, system.armor_math, system.armor_y)
+    if system.armor_math != 4:
+        if system.enemy.armor_mitigation > system.armor_cap:
+            system.enemy.armor_mitigation = system.armor_cap
 
 
 def set_ruleset():
@@ -467,6 +623,7 @@ def set_ruleset():
     else:
         system.armor_price = 3
 
+
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
     if 'key' not in session:
@@ -501,22 +658,196 @@ def stat_sheet():
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
     system = sessions[session['key']]
-    game_state = 0
+    win_condition = False
+    combatlog = []
+    turn = ''
 
-    def battle_turn(token):
-        if token == 'Hero':
-            placeholder = 0
-        else:
-            placeholder = 0
+    hero_health = (system.hero.endurance * system.endurance_value) + system.base_health
+    enemy_health = (system.enemy.endurance * system.endurance_value) + system.base_health
+    hero_speed_base = system.hero.speed
+    enemy_speed_base = system.enemy.speed
+    hero_charisma_buff = False
+    hero_buff = 0.0
+    enemy_charisma_buff = False
+    enemy_buff = 0.0
+    hero_charisma_debuff = False
+    hero_debuff = 0.0
+    enemy_charisma_debuff = False
+    enemy_debuff = 0.0
+    absorbed = 0
+    critical = False
+    dodged = False
+    absorption = False
 
-    def combatlog():
-        if game_state == 0:
-            if system.hero.speed >= system.enemy.speed:
-                battle_turn('Hero')
+    while not win_condition:
+        turn = ''
+        if hero_speed_base >= enemy_speed_base:
+            chance_physical = system.hero.likelihood_of_physical
+            chance_magical = system.hero.likelihood_of_physical + system.hero.likelihood_of_magical
+            if chance_physical <= random.randint(1, 100):
+                damage = (random.randint(system.strength_min * 10,
+                                         system.strength_max * 10) * system.hero.strength * system.strength_dmg) / 10
+                attack_type = "physical"
             else:
-                battle_turn('Enemy')
+                damage = (random.randint(system.intelligence_min * 10,
+                                         system.intelligence_max * 10) * system.hero.intelligence * system.intelligence_dmg) / 10
+                attack_type = "magical"
 
-    return render_template('simulation.html', system=system)
+            if random.randint(1, 100) <= system.hero.critical_chance:
+                critical = True
+                if attack_type == "physical":
+                    damage *= system.strength_crit
+                else:
+                    damage *= system.intelligence_crit
+
+            if hero_charisma_buff:
+                damage *= (hero_buff / 10)
+            if hero_charisma_debuff:
+                damage *= (hero_debuff / 10)
+
+            if system.armor_type == attack_type or system.agility_type == "physical and magical":
+                if system.armor_math != 4:
+                    damage *= (system.hero.armor_mitigation / 100)
+                else:
+                    damage -= system.hero.armor_mitigation
+                if damage < 0:
+                    damage = 0
+
+            if system.agility_type == attack_type or system.agility_type == "physical and magical":
+                if random.randint(1, 100) <= system.hero.dodge_chance:
+                    damage = 0
+                    dodged = True
+
+            if system.willpower_type == attack_type or system.willpower_type == "physical and magical":
+                absorbed = damage * (system.hero.resistance / 100)
+                absorbed = round(absorbed)
+                damage *= (system.hero.resistance / 100)
+                absorption = True
+
+            damage = round(damage)
+            enemy_health -= damage
+
+            if dodged:
+                turn += system.hero.name + ' attacks the opponent but he manages to dodge the attack!'
+                dodged = False
+            else:
+                if attack_type == 'physical':
+                    turn += system.hero.name + ' strikes the opponent dealing ' + str(damage) + ' damage!'
+                else:
+                    turn += system.hero.name + ' slings a spell at the opponent dealing ' + str(damage) + ' damage!'
+
+                if critical:
+                    turn += ' Critical strike!'
+                    critical = False
+
+                if absorption:
+                    turn += '<br>' + system.enemy.name + ' manages to absorb ' + str(absorbed) + ' of that damage!'
+                    absorption = False
+
+            turn += '<br>'
+
+            if random.randint(1, 100) <= system.hero.charisma_chance:
+                if random.getrandbits(1) == 1:
+                    hero_buff = random.randint(system.charisma_min, system.charisma_max)
+                    turn += '<i>' + system.hero.name + "let's out a rallying cry, increasing the power of his next " \
+                                                       "attack by " + str(hero_buff) + '%!</i>'
+                    hero_charisma_buff = True
+                else:
+                    enemy_debuff = random.randint(system.charisma_min, system.charisma_max)
+                    turn += '<i>' + system.hero.name + "let's out an intimidating roar, decreasing the power of " \
+                                                       "opponent's next attack " + str(enemy_debuff) + '%!</i>'
+                    enemy_charisma_debuff = True
+
+            enemy_speed_base += enemy_speed_base
+
+        else:
+            chance_physical = system.enemy.likelihood_of_physical
+            if chance_physical <= random.randint(1, 100):
+                damage = (random.randint(system.strength_min * 10,
+                                         system.strength_max * 10) * system.enemy.strength * system.strength_dmg) / 10
+                attack_type = "physical"
+            else:
+                damage = (random.randint(system.intelligence_min * 10,
+                                         system.intelligence_max * 10) * system.enemy.intelligence * system.intelligence_dmg) / 10
+                attack_type = "magical"
+
+            if random.randint(1, 100) <= system.enemy.critical_chance:
+                critical = True
+                if attack_type == "physical":
+                    damage *= system.strength_crit
+                else:
+                    damage *= system.intelligence_crit
+
+            if enemy_charisma_buff:
+                damage *= (enemy_buff / 10)
+            if enemy_charisma_debuff:
+                damage *= (enemy_debuff / 10)
+
+            if system.armor_type == attack_type or system.agility_type == "physical and magical":
+                if system.armor_math != 4:
+                    damage *= (system.enemy.armor_mitigation / 100)
+                else:
+                    damage -= system.enemy.armor_mitigation
+                if damage < 0:
+                    damage = 0
+
+            if system.agility_type == attack_type or system.agility_type == "physical and magical":
+                if random.randint(1, 100) <= system.enemy.dodge_chance:
+                    damage = 0
+                    dodged = True
+
+            if system.willpower_type == attack_type or system.willpower_type == "physical and magical":
+                absorbed = damage * (system.enemy.resistance / 100)
+                absorbed = round(absorbed)
+                damage *= (system.enemy.resistance / 100)
+                absorption = True
+
+            damage = round(damage)
+            enemy_health -= damage
+
+            if dodged:
+                turn += system.enemy.name + ' attacks the opponent but he manages to dodge the attack!'
+                dodged = False
+            else:
+                if attack_type == 'physical':
+                    turn += system.enemy.name + ' strikes the opponent dealing ' + str(damage) + ' damage!'
+                else:
+                    turn += system.enemy.name + ' slings a spell at the opponent dealing ' + str(damage) + ' damage!'
+
+                if critical:
+                    turn += ' Critical strike!'
+                    critical = False
+
+                if absorption:
+                    turn += '<br>' + system.enemy.name + ' manages to absorb ' + str(absorbed) + ' of that damage!'
+                    absorption = False
+
+            turn += '<br>'
+
+            if random.randint(1, 100) <= system.enemy.charisma_chance:
+                if random.getrandbits(1) == 1:
+                    enemy_buff = random.randint(system.charisma_min, system.charisma_max)
+                    turn += '<i>' + system.enemy.name + "let's out a rallying cry, increasing the power of his next " \
+                                                        "attack by " + str(enemy_buff) + '%!</i>'
+                    enemy_charisma_buff = True
+                else:
+                    hero_debuff = random.randint(system.charisma_min, system.charisma_max)
+                    turn += '<i>' + system.enemy.name + "let's out an intimidating roar, decreasing the power of " \
+                                                        "opponent's next attack " + str(hero_debuff) + '%!</i>'
+                    hero_charisma_debuff = True
+
+            hero_speed_base += hero_speed_base
+
+        if hero_health <= 0:
+            turn += system.hero.name + ' has fallen. ' + system.enemy.name + ' has won the battle!<br>'
+            win_condition = True
+        if enemy_health <= 0:
+            turn += system.enemy.name + ' has fallen. ' + system.hero.name + ' has won the battle!<br>'
+            win_condition = True
+
+        combatlog.append(turn)
+
+    return render_template('simulation.html', system=system, combatlog=combatlog)
 
 
 if __name__ == '__main__':
