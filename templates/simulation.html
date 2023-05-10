@@ -21,8 +21,11 @@
 
     <div id="simulation-box">
         {% for line in combatlog %}
-            <p>{{ line|safe }}</p>
+            <div>
+                <p>{{ line|safe }}</p>
+            </div>
         {% endfor %}
     </div>
+    <a href="{{ url_for('simulation') }}" id="repeat-simulation">Repeat simulation</a>
 
 {% endblock %}

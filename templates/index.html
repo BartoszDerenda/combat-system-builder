@@ -2,6 +2,7 @@
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/navigation.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/homepage.css') }}" type="text/css" />
 {% endblock %}
 
 {% block body %}
@@ -16,6 +17,12 @@
         <div class="nav-box">
             <a href="{{ url_for('simulation') }}" class="nav-text">Simulation</a>
         </div>
+    </div>
+    <div id="homepage-box">
+        <h1>Combat System Builder</h1>
+        <p>CSB is a tool for developing auto-battling turn-based combat systems for RPG games.</p>
+        <p>To start, head to the Ruleset section to customize your system.</p>
+        <p>In Stat Sheet you can prepare two characters with </p>
     </div>
 
 {% endblock %}

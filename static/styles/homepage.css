@@ -1,0 +1,14 @@
+#homepage-box {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+
+    width: 100vw;
+
+    background-color: #474d75;
+}
+
+h1 {
+    font-size: 1.5em;
+}

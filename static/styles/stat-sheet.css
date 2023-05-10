@@ -33,6 +33,53 @@ input {
     background-color: #33385b;
 }
 
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.hero-tooltip {
+    background-color: rgb(46, 57, 96);
+    border: 4px ridge rgb(50, 59, 98);
+}
+
+.enemy-tooltip {
+    background-color: rgb(73, 36, 37);
+    border: 4px ridge rgb(88, 45, 46);
+}
+
+.tooltip-text-combat-value {
+    visibility: hidden;
+
+    padding: 10px;
+    width: 250px;
+    text-align: center;
+
+    /* Tooltip text position */
+    position: absolute;
+    z-index: 1;
+    top: 20px;
+    right: -2%;
+}
+
+.tooltip-text-likelihood {
+    visibility: hidden;
+
+    padding: 10px;
+    width: 250px;
+    text-align: center;
+
+    /* Tooltip text position */
+    position: absolute;
+    z-index: 1;
+    top: 90px;
+    right: -2%;
+}
+
+.tooltip:hover .tooltip-text-likelihood, .tooltip:hover .tooltip-text-combat-value {
+    visibility: visible;
+}
+
 .small-padding-top {
     padding-top: 30px;
 }
@@ -42,8 +89,8 @@ input {
 }
 
 .hero-stat-sheet-table > table {
-    background-color: rgb(73, 78, 98);
-    border: 10px ridge rgb(47, 50, 86);
+    background-color: rgb(71, 84, 134);
+    border: 10px ridge rgb(50, 59, 98);
 }
 
 .hero-td-category {
@@ -57,26 +104,37 @@ input {
 }
 
 .enemy-stat-sheet-table > table {
-    background-color: rgb(55, 63, 82);
-    border: 10px ridge rgb(61, 66, 101);
+    background-color: rgb(103, 59, 59);
+    border: 10px ridge rgb(89, 45, 45);
 }
 
 .enemy-td-category {
-    background-color: rgb(33, 35, 59);
+    background-color: rgb(72, 35, 35);
     padding: 0 0 0 5%;
 }
 
 .enemy-td-value {
-    background-color: rgb(38, 41, 79);
+    background-color: rgb(87, 37, 37);
     padding: 0 0 0 5%;
 }
 
 .confirm-btn {
     grid-area: 2 / 1 / 3 / 4;
     margin-top: 10%;
+    margin-bottom: 10%;
 }
 
-@media (max-width: 700px) {
+#submit {
+    width: 200px;
+    height: 50px;
+}
+
+#submit:hover {
+    transition: 0.2s;
+    background-color: #6872af;
+}
+
+@media (max-width: 1000px) {
     #stat-sheet-grid {
         display: grid;
         grid-template-columns: 1fr;
@@ -96,5 +154,10 @@ input {
 
     .confirm-btn {
         grid-area: 3 / 1 / 4 / 2;
+    }
+
+    #submit {
+        width: 50%;
+        height: 20%;
     }
 }

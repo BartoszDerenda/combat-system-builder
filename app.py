@@ -30,6 +30,7 @@ class Fighter:
         self.armor = 1
         self.likelihood_of_physical = 50
         self.likelihood_of_magical = 50
+        self.total_value = 0
 
         self.physical_min = 0
         self.physical_max = 0
@@ -63,14 +64,14 @@ class System:
         self.agility_type = "physical"
         self.agility_math = 1
         self.agility_x = "strength"
-        self.agility_y = 3
+        self.agility_y = 3.0
         self.agility_cap = 33
         self.agility_price = 1
 
         self.willpower_type = "magical"
         self.willpower_math = 1
         self.willpower_x = "intelligence"
-        self.willpower_y = 2
+        self.willpower_y = 2.0
         self.willpower_cap = 50
         self.willpower_price = 1
 
@@ -80,7 +81,7 @@ class System:
 
         self.charisma_math = 1
         self.charisma_x = "level"
-        self.charisma_y = 3
+        self.charisma_y = 3.0
         self.charisma_min = 15
         self.charisma_max = 35
         self.charisma_cap = 33
@@ -88,7 +89,7 @@ class System:
 
         self.luck_math = 1
         self.luck_x = "level"
-        self.luck_y = 2
+        self.luck_y = 2.0
         self.luck_cap = 50
         self.luck_price = 1
 
@@ -96,7 +97,7 @@ class System:
 
         self.armor_type = "physical and magical"
         self.armor_math = 1
-        self.armor_y = 100
+        self.armor_y = 100.0
         self.armor_cap = 75
         self.armor_price = 2
 
@@ -142,7 +143,7 @@ def attribute_calculator(attribute, attribute_math, attribute_x, attribute_y):
         effect_chance = round(
             (math.log(attribute, attribute_y) * 10), 1)
     elif attribute_math == 5:
-        effect_chance = attribute
+        effect_chance = round(attribute/attribute_y)
     else:
         effect_chance = 0
 
@@ -156,7 +157,9 @@ def armor_calculator(attribute, attribute_math, attribute_y):
     elif attribute_math == 2:
         armor_mitigation = round(
             (math.log(attribute, attribute_y) * 10), 1)
-    elif attribute_math == 3 or attribute_math == 4:
+    elif attribute_math == 3:
+        armor_mitigation = round(attribute / attribute_y)
+    elif attribute_math == 4:
         armor_mitigation = attribute
     else:
         armor_mitigation = 0
@@ -191,12 +194,12 @@ def set_stats():
     if request.form.get("hero_agi") != '' and int(request.form.get("hero_agi")) > 0:
         system.hero.agility = int(request.form.get("hero_agi"))
     else:
-        system.hero.agility = 1
+        system.hero.agility = 0
 
     if request.form.get("hero_will") != '' and int(request.form.get("hero_will")) > 0:
         system.hero.willpower = int(request.form.get("hero_will"))
     else:
-        system.hero.willpower = 1
+        system.hero.willpower = 0
 
     if request.form.get("hero_end") != '' and int(request.form.get("hero_end")) > 0:
         system.hero.endurance = int(request.form.get("hero_end"))
@@ -206,12 +209,12 @@ def set_stats():
     if request.form.get("hero_char") != '' and int(request.form.get("hero_char")) > 0:
         system.hero.charisma = int(request.form.get("hero_char"))
     else:
-        system.hero.charisma = 1
+        system.hero.charisma = 0
 
     if request.form.get("hero_lck") != '' and int(request.form.get("hero_lck")) > 0:
         system.hero.luck = int(request.form.get("hero_lck"))
     else:
-        system.hero.luck = 1
+        system.hero.luck = 0
 
     if request.form.get("hero_spd") != '' and int(request.form.get("hero_spd")) > 0:
         system.hero.speed = int(request.form.get("hero_spd"))
@@ -221,7 +224,7 @@ def set_stats():
     if request.form.get("hero_armor") != '' and int(request.form.get("hero_armor")) > 0:
         system.hero.armor = int(request.form.get("hero_armor"))
     else:
-        system.hero.armor = 1
+        system.hero.armor = 0
 
     if request.form.get("hero_likelihood_of_physical") != '' and int(
             request.form.get("hero_likelihood_of_physical")) > 0:
@@ -233,6 +236,17 @@ def set_stats():
         system.hero.likelihood_of_magical = int(request.form.get("hero_likelihood_of_magical"))
     else:
         system.hero.likelihood_of_magical = 50
+
+    system.hero.total_value = \
+        system.strength_price * system.hero.strength + \
+        system.intelligence_price * system.hero.intelligence + \
+        system.agility_price * system.hero.agility + \
+        system.willpower_price * system.hero.willpower + \
+        system.endurance_price * system.hero.endurance + \
+        system.charisma_price * system.hero.charisma + \
+        system.luck_price * system.hero.luck + \
+        system.speed_price * system.hero.speed + \
+        system.armor_price * system.hero.armor
 
     # Enemy statistics
     if request.form.get("enemy_name") != '':
@@ -258,12 +272,12 @@ def set_stats():
     if request.form.get("enemy_agi") != '' and int(request.form.get("enemy_agi")) > 0:
         system.enemy.agility = int(request.form.get("enemy_agi"))
     else:
-        system.enemy.agility = 1
+        system.enemy.agility = 0
 
     if request.form.get("enemy_will") != '' and int(request.form.get("enemy_will")) > 0:
         system.enemy.willpower = int(request.form.get("enemy_will"))
     else:
-        system.enemy.willpower = 1
+        system.enemy.willpower = 0
 
     if request.form.get("enemy_end") != '' and int(request.form.get("enemy_end")) > 0:
         system.enemy.endurance = int(request.form.get("enemy_end"))
@@ -273,12 +287,12 @@ def set_stats():
     if request.form.get("enemy_char") != '' and int(request.form.get("enemy_char")) > 0:
         system.enemy.charisma = int(request.form.get("enemy_char"))
     else:
-        system.enemy.charisma = 1
+        system.enemy.charisma = 0
 
     if request.form.get("enemy_lck") != '' and int(request.form.get("enemy_lck")) > 0:
         system.enemy.luck = int(request.form.get("enemy_lck"))
     else:
-        system.enemy.luck = 1
+        system.enemy.luck = 0
 
     if request.form.get("enemy_spd") != '' and int(request.form.get("enemy_spd")) > 0:
         system.enemy.speed = int(request.form.get("enemy_spd"))
@@ -288,7 +302,7 @@ def set_stats():
     if request.form.get("enemy_armor") != '' and int(request.form.get("enemy_armor")) > 0:
         system.enemy.armor = int(request.form.get("enemy_armor"))
     else:
-        system.enemy.armor = 1
+        system.enemy.armor = 0
 
     if request.form.get("enemy_likelihood_of_physical") != '' and int(
             request.form.get("enemy_likelihood_of_physical")) > 0:
@@ -301,6 +315,17 @@ def set_stats():
         system.enemy.likelihood_of_magical = int(request.form.get("enemy_likelihood_of_magical"))
     else:
         system.enemy.likelihood_of_magical = 50
+
+    system.enemy.total_value = \
+        system.strength_price * system.enemy.strength + \
+        system.intelligence_price * system.enemy.intelligence + \
+        system.agility_price * system.enemy.agility + \
+        system.willpower_price * system.enemy.willpower + \
+        system.endurance_price * system.enemy.endurance + \
+        system.charisma_price * system.enemy.charisma + \
+        system.luck_price * system.enemy.luck + \
+        system.speed_price * system.enemy.speed + \
+        system.armor_price * system.enemy.armor
 
     # Hero extras
     system.hero.physical_min = round(system.hero.strength * system.strength_dmg * system.strength_min)
@@ -336,7 +361,7 @@ def set_stats():
         if system.hero.armor_mitigation > system.armor_cap:
             system.hero.armor_mitigation = system.armor_cap
 
-    # Hero extras
+    # Enemy extras
     system.enemy.physical_min = round(system.enemy.strength * system.strength_dmg * system.strength_min)
     system.enemy.physical_max = round(system.enemy.strength * system.strength_dmg * system.strength_max)
 
@@ -384,12 +409,12 @@ def set_ruleset():
     else:
         system.strength_dmg = 3
 
-    if request.form.get("strength_min") != '' and float(request.form.get("strength_min")) > 0:
+    if request.form.get("strength_min") != '' and float(request.form.get("strength_min")) >= 0.1:
         system.strength_min = float(request.form.get("strength_min"))
     else:
         system.strength_min = 0.9
 
-    if request.form.get("strength_max") != '' and float(request.form.get("strength_max")) > 0:
+    if request.form.get("strength_max") != '' and float(request.form.get("strength_max")) >= 0.1:
         system.strength_max = float(request.form.get("strength_max"))
     else:
         system.strength_max = 1.1
@@ -399,12 +424,12 @@ def set_ruleset():
         system.strength_min = system.strength_max
         system.strength_max = temp
 
-    if request.form.get("strength_crit") != '' and float(request.form.get("strength_crit")) > 0:
+    if request.form.get("strength_crit") != '' and float(request.form.get("strength_crit")) >= 0.1:
         system.strength_crit = float(request.form.get("strength_crit"))
     else:
         system.strength_crit = 1.5
 
-    if request.form.get("strength_price") != '' and int(request.form.get("strength_price")) > 0:
+    if request.form.get("strength_price") != '' and int(request.form.get("strength_price")) >= 1:
         system.strength_price = int(request.form.get("strength_price"))
     else:
         system.strength_price = 2
@@ -417,12 +442,12 @@ def set_ruleset():
     else:
         system.intelligence_dmg = 3
 
-    if request.form.get("intelligence_min") != '' and float(request.form.get("intelligence_min")) > 0:
+    if request.form.get("intelligence_min") != '' and float(request.form.get("intelligence_min")) >= 0.1:
         system.intelligence_min = float(request.form.get("intelligence_min"))
     else:
         system.intelligence_min = 0.9
 
-    if request.form.get("intelligence_max") != '' and float(request.form.get("intelligence_max")) > 0:
+    if request.form.get("intelligence_max") != '' and float(request.form.get("intelligence_max")) >= 0.1:
         system.intelligence_max = float(request.form.get("intelligence_max"))
     else:
         system.intelligence_max = 1.1
@@ -432,12 +457,12 @@ def set_ruleset():
         system.intelligence_min = system.intelligence_max
         system.intelligence_max = temp
 
-    if request.form.get("intelligence_crit") != '' and float(request.form.get("intelligence_crit")) > 0:
+    if request.form.get("intelligence_crit") != '' and float(request.form.get("intelligence_crit")) >= 0.1:
         system.intelligence_crit = float(request.form.get("intelligence_crit"))
     else:
         system.intelligence_crit = 1.5
 
-    if request.form.get("intelligence_price") != '' and int(request.form.get("intelligence_price")) > 0:
+    if request.form.get("intelligence_price") != '' and int(request.form.get("intelligence_price")) >= 1:
         system.intelligence_price = int(request.form.get("intelligence_price"))
     else:
         system.intelligence_price = 2
@@ -460,17 +485,17 @@ def set_ruleset():
     else:
         system.agility_x = "strength"
 
-    if request.form.get("agility_y") != '' and int(request.form.get("agility_y")) > 0:
-        system.agility_y = int(request.form.get("agility_y"))
+    if request.form.get("agility_y") != '' and float(request.form.get("agility_y")) >= 0.1:
+        system.agility_y = float(request.form.get("agility_y"))
     else:
-        system.agility_y = 3
+        system.agility_y = 3.0
 
     if request.form.get("agility_cap") != '' and int(request.form.get("agility_cap")) > 0:
         system.agility_cap = int(request.form.get("agility_cap"))
     else:
         system.agility_cap = 33
 
-    if request.form.get("agility_price") != '' and int(request.form.get("agility_price")) > 0:
+    if request.form.get("agility_price") != '' and int(request.form.get("agility_price")) >= 1:
         system.agility_price = int(request.form.get("agility_price"))
     else:
         system.agility_price = 1
@@ -493,17 +518,17 @@ def set_ruleset():
     else:
         system.willpower_x = "intelligence"
 
-    if request.form.get("willpower_y") != '' and int(request.form.get("willpower_y")) > 0:
-        system.willpower_y = int(request.form.get("willpower_y"))
+    if request.form.get("willpower_y") != '' and float(request.form.get("willpower_y")) >= 0.1:
+        system.willpower_y = float(request.form.get("willpower_y"))
     else:
-        system.willpower_y = 3
+        system.willpower_y = 3.0
 
     if request.form.get("willpower_cap") != '' and int(request.form.get("willpower_cap")) > 0:
         system.willpower_cap = int(request.form.get("willpower_cap"))
     else:
         system.willpower_cap = 50
 
-    if request.form.get("willpower_price") != '' and int(request.form.get("willpower_price")) > 0:
+    if request.form.get("willpower_price") != '' and int(request.form.get("willpower_price")) >= 1:
         system.willpower_price = int(request.form.get("willpower_price"))
     else:
         system.willpower_price = 1
@@ -516,12 +541,12 @@ def set_ruleset():
     else:
         system.base_health = 200
 
-    if request.form.get("endurance_value") != '' and int(request.form.get("endurance_value")) > 0:
+    if request.form.get("endurance_value") != '' and int(request.form.get("endurance_value")) >= 1:
         system.endurance_value = int(request.form.get("endurance_value"))
     else:
         system.endurance_value = 10
 
-    if request.form.get("endurance_price") != '' and int(request.form.get("endurance_price")) > 0:
+    if request.form.get("endurance_price") != '' and int(request.form.get("endurance_price")) >= 1:
         system.endurance_price = int(request.form.get("endurance_price"))
     else:
         system.endurance_price = 3
@@ -539,17 +564,17 @@ def set_ruleset():
     else:
         system.charisma_x = "level"
 
-    if request.form.get("charisma_y") != '' and int(request.form.get("charisma_y")) > 0:
-        system.charisma_y = int(request.form.get("charisma_y"))
+    if request.form.get("charisma_y") != '' and float(request.form.get("charisma_y")) >= 0.1:
+        system.charisma_y = float(request.form.get("charisma_y"))
     else:
-        system.charisma_y = 3
+        system.charisma_y = 3.0
 
-    if request.form.get("charisma_min") != '' and int(request.form.get("charisma_min")) > 0:
+    if request.form.get("charisma_min") != '' and int(request.form.get("charisma_min")) >= 1:
         system.charisma_min = int(request.form.get("charisma_min"))
     else:
         system.charisma_min = 15
 
-    if request.form.get("charisma_max") != '' and int(request.form.get("charisma_max")) > 0:
+    if request.form.get("charisma_max") != '' and int(request.form.get("charisma_max")) >= 1:
         system.charisma_max = int(request.form.get("charisma_max"))
     else:
         system.charisma_max = 35
@@ -564,7 +589,7 @@ def set_ruleset():
     else:
         system.charisma_cap = 33
 
-    if request.form.get("charisma_price") != '' and int(request.form.get("charisma_price")) > 0:
+    if request.form.get("charisma_price") != '' and int(request.form.get("charisma_price")) >= 1:
         system.charisma_price = int(request.form.get("charisma_price"))
     else:
         system.charisma_price = 1
@@ -582,17 +607,17 @@ def set_ruleset():
     else:
         system.luck_x = "level"
 
-    if request.form.get("luck_y") != '' and int(request.form.get("luck_y")) > 0:
-        system.luck_y = int(request.form.get("luck_y"))
+    if request.form.get("luck_y") != '' and float(request.form.get("luck_y")) >= 0.1:
+        system.luck_y = float(request.form.get("luck_y"))
     else:
-        system.luck_y = 2
+        system.luck_y = 2.0
 
     if request.form.get("luck_cap") != '' and int(request.form.get("luck_cap")) > 0:
         system.luck_cap = int(request.form.get("luck_cap"))
     else:
         system.luck_cap = 50
 
-    if request.form.get("luck_price") != '' and int(request.form.get("luck_price")) > 0:
+    if request.form.get("luck_price") != '' and int(request.form.get("luck_price")) >= 1:
         system.luck_price = int(request.form.get("luck_price"))
     else:
         system.luck_price = 1
@@ -600,7 +625,7 @@ def set_ruleset():
     #
     # SPEED
     #
-    if request.form.get("speed_price") != '' and int(request.form.get("speed_price")) > 0:
+    if request.form.get("speed_price") != '' and int(request.form.get("speed_price")) >= 1:
         system.speed_price = int(request.form.get("speed_price"))
     else:
         system.speed_price = 3
@@ -618,7 +643,17 @@ def set_ruleset():
     else:
         system.armor_math = 1
 
-    if request.form.get("armor_price") != '' and int(request.form.get("armor_price")) > 0:
+    if request.form.get("armor_y") != '' and float(request.form.get("armor_y")) >= 0.1:
+        system.armor_y = float(request.form.get("armor_y"))
+    else:
+        system.armor_y = 100.0
+
+    if request.form.get("armor_cap") != '' and float(request.form.get("armor_cap")) > 0:
+        system.armor_cap = int(request.form.get("armor_cap"))
+    else:
+        system.armor_cap = 75
+
+    if request.form.get("armor_price") != '' and int(request.form.get("armor_price")) >= 1:
         system.armor_price = int(request.form.get("armor_price"))
     else:
         system.armor_price = 3
@@ -660,12 +695,13 @@ def simulation():
     system = sessions[session['key']]
     win_condition = False
     combatlog = []
-    turn = ''
 
     hero_health = (system.hero.endurance * system.endurance_value) + system.base_health
     enemy_health = (system.enemy.endurance * system.endurance_value) + system.base_health
     hero_speed_base = system.hero.speed
     enemy_speed_base = system.enemy.speed
+    damage = 0
+    attack_type = 0
     hero_charisma_buff = False
     hero_buff = 0.0
     enemy_charisma_buff = False
@@ -674,175 +710,187 @@ def simulation():
     hero_debuff = 0.0
     enemy_charisma_debuff = False
     enemy_debuff = 0.0
-    absorbed = 0
+    amount_absorbed = 0
     critical = False
     dodged = False
     absorption = False
 
-    while not win_condition:
-        turn = ''
-        if hero_speed_base >= enemy_speed_base:
-            chance_physical = system.hero.likelihood_of_physical
-            chance_magical = system.hero.likelihood_of_physical + system.hero.likelihood_of_magical
-            if chance_physical <= random.randint(1, 100):
-                damage = (random.randint(system.strength_min * 10,
-                                         system.strength_max * 10) * system.hero.strength * system.strength_dmg) / 10
-                attack_type = "physical"
-            else:
-                damage = (random.randint(system.intelligence_min * 10,
-                                         system.intelligence_max * 10) * system.hero.intelligence * system.intelligence_dmg) / 10
-                attack_type = "magical"
+    def attack_choice(token, damage_input, attack_type_output):
+        chance_physical = getattr(getattr(system, token), "likelihood_of_physical")
+        strength_stat = getattr(getattr(system, token), "strength")
+        intelligence_stat = getattr(getattr(system, token), "intelligence")
+        if chance_physical <= random.randint(1, 100):
+            damage_input = (random.randint(system.strength_min * 10,
+                                           system.strength_max * 10) * strength_stat * system.strength_dmg) / 10
+            attack_type_output = "physical"
+        else:
+            damage_input = (random.randint(system.intelligence_min * 10,
+                                           system.intelligence_max * 10) * intelligence_stat * system.intelligence_dmg) / 10
+            attack_type_output = "magical"
 
-            if random.randint(1, 100) <= system.hero.critical_chance:
-                critical = True
-                if attack_type == "physical":
-                    damage *= system.strength_crit
-                else:
-                    damage *= system.intelligence_crit
+        return damage_input, attack_type_output
+
+    def critical_chance(token, damage_input, critical_state):
+        crit_chance = getattr(getattr(system, token), "critical_chance")
+        if random.randint(1, 100) <= crit_chance:
+            critical_state = True
+            if attack_type == "physical":
+                damage_input *= system.strength_crit
+            else:
+                damage_input *= system.intelligence_crit
+        return damage_input, critical_state
+
+    def armor_mitigation(token, damage_input):
+        armor = getattr(getattr(system, token), "armor_mitigation")
+        if system.armor_type == attack_type or system.armor_type == "physical and magical":
+            if system.armor_math != 4:
+                damage_input *= (100 - armor) / 100
+            else:
+                damage_input -= armor
+            if damage_input < 0:
+                damage_input = 0
+        return damage_input
+
+    def agility_dodge(token, damage_input, dodged_state):
+        dodge = getattr(getattr(system, token), "dodge_chance")
+        if system.agility_type == attack_type or system.agility_type == "physical and magical":
+            if random.randint(1, 100) <= dodge:
+                damage_input = 0
+                dodged_state = True
+        return damage_input, dodged_state
+
+    def willpower_resistance(token, damage_input, absorbed_input, absorption_state):
+        resistance = getattr(getattr(system, token), "resistance")
+        if dodged is False and (
+                system.willpower_type == attack_type or system.willpower_type == "physical and magical") \
+                and damage > 0 and resistance > 0:
+            absorbed_input = damage_input * (resistance / 100)
+            absorbed_input = round(absorbed_input)
+            damage_input -= absorbed_input
+            absorption_state = True
+        return damage_input, absorbed_input, absorption_state
+
+    while not win_condition:
+        turn = ""
+        if hero_speed_base >= enemy_speed_base:
+
+            damage, attack_type = attack_choice("hero", damage, attack_type)
 
             if hero_charisma_buff:
-                damage *= (hero_buff / 10)
+                damage *= ((100 + hero_buff) / 100)
+                hero_charisma_buff = False
             if hero_charisma_debuff:
-                damage *= (hero_debuff / 10)
+                damage *= ((100 - hero_debuff) / 100)
+                hero_charisma_debuff = False
 
-            if system.armor_type == attack_type or system.agility_type == "physical and magical":
-                if system.armor_math != 4:
-                    damage *= (system.hero.armor_mitigation / 100)
-                else:
-                    damage -= system.hero.armor_mitigation
-                if damage < 0:
-                    damage = 0
-
-            if system.agility_type == attack_type or system.agility_type == "physical and magical":
-                if random.randint(1, 100) <= system.hero.dodge_chance:
-                    damage = 0
-                    dodged = True
-
-            if system.willpower_type == attack_type or system.willpower_type == "physical and magical":
-                absorbed = damage * (system.hero.resistance / 100)
-                absorbed = round(absorbed)
-                damage *= (system.hero.resistance / 100)
-                absorption = True
+            damage, critical = critical_chance("hero", damage, critical)
+            damage = armor_mitigation("hero", damage)
+            damage, dodged = agility_dodge("hero", damage, dodged)
+            damage, amount_absorbed, absorption = willpower_resistance("hero", damage, amount_absorbed, absorption)
 
             damage = round(damage)
             enemy_health -= damage
 
+            turn += '<div class="hero-turn">'
             if dodged:
-                turn += system.hero.name + ' attacks the opponent but he manages to dodge the attack!'
+                turn += system.hero.name + ' attacks the opponent but he manages to <span class="agility-dodge">dodge the attack!</span>'
                 dodged = False
             else:
                 if attack_type == 'physical':
-                    turn += system.hero.name + ' strikes the opponent dealing ' + str(damage) + ' damage!'
+                    turn += system.hero.name + ' strikes the opponent dealing <span class="physical-damage">' + str(
+                        damage) + ' damage!</span>'
                 else:
-                    turn += system.hero.name + ' slings a spell at the opponent dealing ' + str(damage) + ' damage!'
+                    turn += system.hero.name + ' slings a spell at the opponent dealing <span class="magical-damage">' + str(
+                        damage) + ' damage!</span>'
 
                 if critical:
-                    turn += ' Critical strike!'
+                    turn += '<span class="critical-effect"> Critical strike!</span>'
                     critical = False
 
                 if absorption:
-                    turn += '<br>' + system.enemy.name + ' manages to absorb ' + str(absorbed) + ' of that damage!'
+                    turn += '<br>' + system.enemy.name + ' manages to <span class="willpower-absorb">absorb ' + str(
+                        amount_absorbed) + '</span> of that damage!'
                     absorption = False
-
-            turn += '<br>'
 
             if random.randint(1, 100) <= system.hero.charisma_chance:
                 if random.getrandbits(1) == 1:
                     hero_buff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<i>' + system.hero.name + "let's out a rallying cry, increasing the power of his next " \
-                                                       "attack by " + str(hero_buff) + '%!</i>'
+                    turn += '<br><i class="charisma-effect">' + system.hero.name + " let's out a rallying cry, increasing the power of his next " \
+                                                                                   "attack by " + str(
+                        hero_buff) + '%!</i>'
                     hero_charisma_buff = True
                 else:
                     enemy_debuff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<i>' + system.hero.name + "let's out an intimidating roar, decreasing the power of " \
-                                                       "opponent's next attack " + str(enemy_debuff) + '%!</i>'
+                    turn += '<br><i class="charisma-effect">' + system.hero.name + " let's out an intimidating roar, decreasing the power of " \
+                                                                                   "opponent's next attack " + str(
+                        enemy_debuff) + '%!</i>'
                     enemy_charisma_debuff = True
 
-            enemy_speed_base += enemy_speed_base
+            turn += '</div><br>'
+            enemy_speed_base += system.enemy.speed
 
         else:
-            chance_physical = system.enemy.likelihood_of_physical
-            if chance_physical <= random.randint(1, 100):
-                damage = (random.randint(system.strength_min * 10,
-                                         system.strength_max * 10) * system.enemy.strength * system.strength_dmg) / 10
-                attack_type = "physical"
-            else:
-                damage = (random.randint(system.intelligence_min * 10,
-                                         system.intelligence_max * 10) * system.enemy.intelligence * system.intelligence_dmg) / 10
-                attack_type = "magical"
 
-            if random.randint(1, 100) <= system.enemy.critical_chance:
-                critical = True
-                if attack_type == "physical":
-                    damage *= system.strength_crit
-                else:
-                    damage *= system.intelligence_crit
+            damage, attack_type = attack_choice("enemy", damage, attack_type)
 
             if enemy_charisma_buff:
-                damage *= (enemy_buff / 10)
+                damage *= ((100 + enemy_buff) / 100)
+                enemy_charisma_buff = False
             if enemy_charisma_debuff:
-                damage *= (enemy_debuff / 10)
+                damage *= ((100 - enemy_debuff) / 100)
+                enemy_charisma_debuff = False
 
-            if system.armor_type == attack_type or system.agility_type == "physical and magical":
-                if system.armor_math != 4:
-                    damage *= (system.enemy.armor_mitigation / 100)
-                else:
-                    damage -= system.enemy.armor_mitigation
-                if damage < 0:
-                    damage = 0
-
-            if system.agility_type == attack_type or system.agility_type == "physical and magical":
-                if random.randint(1, 100) <= system.enemy.dodge_chance:
-                    damage = 0
-                    dodged = True
-
-            if system.willpower_type == attack_type or system.willpower_type == "physical and magical":
-                absorbed = damage * (system.enemy.resistance / 100)
-                absorbed = round(absorbed)
-                damage *= (system.enemy.resistance / 100)
-                absorption = True
+            damage, critical = critical_chance("enemy", damage, critical)
+            damage = armor_mitigation("enemy", damage)
+            damage, dodged = agility_dodge("enemy", damage, dodged)
+            damage, amount_absorbed, absorption = willpower_resistance("enemy", damage, amount_absorbed, absorption)
 
             damage = round(damage)
-            enemy_health -= damage
+            hero_health -= damage
 
+            turn += '<div class="enemy-turn">'
             if dodged:
-                turn += system.enemy.name + ' attacks the opponent but he manages to dodge the attack!'
+                turn += system.enemy.name + ' attacks the opponent but he manages to <span class="agility-dodge">dodge the attack!</span>'
                 dodged = False
             else:
                 if attack_type == 'physical':
-                    turn += system.enemy.name + ' strikes the opponent dealing ' + str(damage) + ' damage!'
+                    turn += system.enemy.name + ' strikes the opponent dealing <span class="physical-damage">' + str(
+                        damage) + ' damage!</span>'
                 else:
-                    turn += system.enemy.name + ' slings a spell at the opponent dealing ' + str(damage) + ' damage!'
+                    turn += system.enemy.name + ' slings a spell at the opponent dealing <span class="magical-damage">' + str(
+                        damage) + ' damage!</span>'
 
                 if critical:
-                    turn += ' Critical strike!'
+                    turn += '<span class="critical-effect"> Critical strike!</span>'
                     critical = False
 
                 if absorption:
-                    turn += '<br>' + system.enemy.name + ' manages to absorb ' + str(absorbed) + ' of that damage!'
+                    turn += '<br>' + system.enemy.name + ' manages to <span class="willpower-absorb"> absorb ' + str(
+                        amount_absorbed) + '</span> of that damage!'
                     absorption = False
-
-            turn += '<br>'
 
             if random.randint(1, 100) <= system.enemy.charisma_chance:
                 if random.getrandbits(1) == 1:
                     enemy_buff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<i>' + system.enemy.name + "let's out a rallying cry, increasing the power of his next " \
-                                                        "attack by " + str(enemy_buff) + '%!</i>'
+                    turn += '<br><i class="charisma-effect">' + system.enemy.name + " let's out a rallying cry, increasing the power of his next " \
+                                                                                    "attack by " + str(
+                        enemy_buff) + '%!</i>'
                     enemy_charisma_buff = True
                 else:
                     hero_debuff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<i>' + system.enemy.name + "let's out an intimidating roar, decreasing the power of " \
-                                                        "opponent's next attack " + str(hero_debuff) + '%!</i>'
+                    turn += '<br><i class="charisma-effect">' + system.enemy.name + " let's out an intimidating roar, decreasing the power of " \
+                                                                                    "opponent's next attack " + str(
+                        hero_debuff) + '%!</i>'
                     hero_charisma_debuff = True
 
-            hero_speed_base += hero_speed_base
+            turn += '</div><br>'
+            hero_speed_base += system.hero.speed
 
         if hero_health <= 0:
-            turn += system.hero.name + ' has fallen. ' + system.enemy.name + ' has won the battle!<br>'
+            turn += '<br><div class="enemy-victory">' + system.hero.name + ' has fallen. ' + system.enemy.name + ' has won the battle!</div><br>'
             win_condition = True
         if enemy_health <= 0:
-            turn += system.enemy.name + ' has fallen. ' + system.hero.name + ' has won the battle!<br>'
+            turn += '<br><div class="hero-victory">' + system.enemy.name + ' has fallen. ' + system.hero.name + ' has won the battle!</div><br>'
             win_condition = True
 
         combatlog.append(turn)

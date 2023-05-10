@@ -14,8 +14,35 @@ body {
     margin: 0;
 }
 
+header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    font-size: 1.2em;
+
+    width: 100vw;
+    height: 40px;
+    background-color: #242941;
+}
+
+footer {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+
+    height: 75px;
+    width: 100%;
+    background-color: #242941;
+}
+
 a {
     text-decoration: none;
+}
+
+footer > a {
+    color: #878b9f;
 }
 
 label:hover, #submit:hover, .nav-text:hover {

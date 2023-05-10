@@ -20,7 +20,7 @@
     <script>
     let v = 1
 
-        function checkIfNotNumberOrNegativeOrEmpty(i) {
+        function checkInt(i) {
             if (isNaN(parseInt(i.value))) {
                 i.value=v;
             }
@@ -34,6 +34,20 @@
                 v=i.value;
         }
 
+        function checkFloat(i) {
+            if (isNaN(parseInt(i.value))) {
+                i.value=v;
+            }
+            else if(i.value <= 0.1) {
+                i.value=0.1;
+            }
+            else if (i.value === null) {
+                i.value=0.1;
+            }
+            else
+                v=i.value;
+        }
+
         function checkIfGreaterThan100(i) {
             if (i.value > 100) {
                 i.value = 100
@@ -41,7 +55,7 @@
         }
 
         function capCheck(i) {
-            checkIfNotNumberOrNegativeOrEmpty(i)
+            checkInt(i)
             checkIfGreaterThan100(i)
         }
     </script>
@@ -73,24 +87,24 @@
                     <td class="small-padding-top">
                         <label for="strength_dmg">Each point of strength increases physical damage dealt by a value of</label>
                         <input type="number" id="strength_dmg" name="strength_dmg" value="{{ system.strength_dmg }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="strength_min">Physical damage spread ranges in between </label>
-                        <input type="number" id="strength_min" name="strength_min" step="any" value="{{ system.strength_min }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <input type="number" id="strength_min" name="strength_min" value="{{ system.strength_min }}"
+                               onblur="checkFloat(this)" min="0.1" step="0.1" required />
                         <label for="strength_max"> and </label>
-                        <input type="number" id="strength_max" name="strength_max" step="any" value="{{ system.strength_max }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <input type="number" id="strength_max" name="strength_max" value="{{ system.strength_max }}"
+                               onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="strength_price">Arbitrary value of each point of strength: </label>
                         <input type="number" id="strength_price" name="strength_price" step="any" value="{{ system.strength_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -105,24 +119,24 @@
                     <td class="small-padding-top">
                         <label for="intelligence_dmg">Each point of intelligence increases magical damage dealt by a value of</label>
                         <input type="number" id="intelligence_dmg" name="intelligence_dmg" value="{{ system.intelligence_dmg }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="intelligence_min">Magical damage spread ranges in between </label>
-                        <input type="number" id="intelligence_min" name="intelligence_min" step="any" value="{{ system.intelligence_min }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <input type="number" id="intelligence_min" name="intelligence_min" value="{{ system.intelligence_min }}"
+                               onblur="checkFloat(this)" min="0.1" step="0.1" required />
                         <label for="intelligence_max"> and </label>
-                        <input type="number" id="intelligence_max" name="intelligence_max" step="any" value="{{ system.intelligence_max }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <input type="number" id="intelligence_max" name="intelligence_max" value="{{ system.intelligence_max }}"
+                               onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="intelligence_price">Arbitrary value of each point of intelligence: </label>
                         <input type="number" id="intelligence_price" name="intelligence_price" step="any" value="{{ system.intelligence_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -220,7 +234,7 @@
                                 checked
                         {% endif %}
                         />
-                        <label for="agility_math_5">$Agility \;$%</label>
+                        <label for="agility_math_5">$Agility \over Y \;$%</label>
                     </td>
                 </tr>
                 <tr>
@@ -244,14 +258,14 @@
                     <td>
                         <label for="agility_y">And Y equals to </label>
                         <input type="number" id="agility_y" name="agility_y" value="{{ system.agility_y }}"
-                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
                         <label for="agility_cap">Maximum achievable dodge chance is </label>
                         <input type="number" id="agility_cap" name="agility_cap" value="{{ system.agility_cap }}"
-                        onblur="capCheck(this)" />
+                        onblur="capCheck(this)" required />
                         <label for="agility_cap">%, agility points above that limit will not have any effect.</label>
                     </td>
                 </tr>
@@ -259,7 +273,7 @@
                     <td>
                         <label for="agility_price">Arbitrary value of each point of agility: </label>
                         <input type="number" id="agility_price" name="agility_price" step="any" value="{{ system.agility_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -357,7 +371,7 @@
                                 checked
                         {% endif %}
                         />
-                        <label for="willpower_math_5">$Willpower \;$%</label>
+                        <label for="willpower_math_5">$Willpower \over Y \;$%</label>
                     </td>
                 </tr>
                 <tr>
@@ -381,14 +395,14 @@
                     <td>
                         <label for="willpower_y">And Y equals to </label>
                         <input type="number" id="willpower_y" name="willpower_y" value="{{ system.willpower_y }}"
-                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
                         <label for="willpower_cap">Maximum achievable resistance is </label>
                         <input type="number" id="willpower_cap" name="willpower_cap" value="{{ system.willpower_cap }}"
-                        onblur="capCheck(this)" />
+                        onblur="capCheck(this)" required />
                         <label for="willpower_cap">%, willpower points above that limit will not have any effect.</label>
                     </td>
                 </tr>
@@ -396,7 +410,7 @@
                     <td>
                         <label for="willpower_price">Arbitrary value of each point of willpower: </label>
                         <input type="number" id="willpower_price" name="willpower_price" step="any" value="{{ system.willpower_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -411,22 +425,22 @@
                 <tr>
                     <td class="small-padding-top">
                         <label for="base_health">Base health of all characters is </label>
-                        <input type="number" id="base_health" name="base_health" step="any" value="{{ system.base_health }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <input type="number" id="base_health" name="base_health" value="{{ system.base_health }}"
+                               onblur="checkInt(this)" min="0" step="10" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="endurance_value">Each point of endurance increases character's health pool by </label>
                         <input type="number" id="endurance_value" name="endurance_value" step="any" value="{{ system.endurance_value }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="endurance_price">Arbitrary value of each point of endurance: </label>
                         <input type="number" id="endurance_price" name="endurance_price" step="any" value="{{ system.endurance_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -491,7 +505,7 @@
                                 checked
                         {% endif %}
                         />
-                        <label for="charisma_math_5">$Charisma \;$%</label>
+                        <label for="charisma_math_5">$Charisma \over Y \;$%</label>
                     </td>
                 </tr>
                 <tr>
@@ -515,18 +529,18 @@
                     <td>
                         <label for="charisma_y">And Y equals to </label>
                         <input type="number" id="charisma_y" name="charisma_y" value="{{ system.charisma_y }}"
-                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
                         <label for="charisma_min">Charisma effect ranges in strength between </label>
                         <input type="number" id="charisma_min" name="charisma_min" step="any" value="{{ system.charisma_min }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" min="1" required />
                         %
                         <label for="charisma_max">and </label>
                         <input type="number" id="charisma_max" name="charisma_max" step="any" value="{{ system.charisma_max }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" min="2" required />
                         %
                     </td>
                 </tr>
@@ -534,7 +548,7 @@
                     <td>
                         <label for="charisma_cap">Maximum achievable chance for charisma effect to trigger is </label>
                         <input type="number" id="charisma_cap" name="charisma_cap" step="any" value="{{ system.charisma_cap }}"
-                               onblur="capCheck(this)" />
+                               onblur="capCheck(this)" required />
                         <label for="charisma_cap">%, charisma points above that limit will not have any effect.</label>
                     </td>
                 </tr>
@@ -542,7 +556,7 @@
                     <td>
                         <label for="charisma_price">Arbitrary value of each point of charisma: </label>
                         <input type="number" id="charisma_price" name="charisma_price" step="any" value="{{ system.charisma_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -557,15 +571,15 @@
                 <tr>
                     <td class="small-padding-top">
                         <label for="strength_crit">Physical strike's critical multiplier is </label>
-                        <input type="number" id="strength_crit" name="strength_crit" step="any" value="{{ system.strength_crit }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <input type="number" id="strength_crit" name="strength_crit" value="{{ system.strength_crit }}"
+                               onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="intelligence_crit">Magical attack's critical multiplier is </label>
-                        <input type="number" id="intelligence_crit" name="intelligence_crit" step="any" value="{{ system.intelligence_crit }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        <input type="number" id="intelligence_crit" name="intelligence_crit" value="{{ system.intelligence_crit }}"
+                               onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
@@ -620,7 +634,7 @@
                                 checked
                         {% endif %}
                         />
-                        <label for="luck_math_5">$Luck \;$%</label>
+                        <label for="luck_math_5">$Luck \over Y \;$%</label>
                     </td>
                 </tr>
                 <tr>
@@ -644,14 +658,14 @@
                     <td>
                         <label for="luck_y">And Y equals to </label>
                         <input type="number" id="luck_y" name="luck_y" value="{{ system.luck_y }}"
-                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
                         <label for="luck_cap">Maximum achievable chance of a critical strike occurring is </label>
                         <input type="number" id="luck_cap" name="luck_cap" step="any" value="{{ system.luck_cap }}"
-                               onblur="capCheck(this)" />
+                               onblur="capCheck(this)" required />
                         <label for="luck_cap">%, luck points above that limit will not have any effect.</label>
                     </td>
                 </tr>
@@ -659,7 +673,7 @@
                     <td>
                         <label for="luck_price">Arbitrary value of each point of luck: </label>
                         <input type="number" id="luck_price" name="luck_price" step="any" value="{{ system.luck_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -690,7 +704,7 @@
                     <td>
                         <label for="speed_price">Arbitrary value of each point of speed: </label>
                         <input type="number" id="speed_price" name="speed_price" step="any" value="{{ system.speed_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
@@ -768,7 +782,7 @@
                                 checked
                         {% endif %}
                         />
-                        <label for="armor_math_3">$Armor \;$%</label>
+                        <label for="armor_math_3">$Armor \over Y \;$%</label>
                     </td>
                 </tr>
                 <tr>
@@ -790,14 +804,14 @@
                     <td>
                         <label for="armor_y">Where Y equals to </label>
                         <input type="number" id="armor_y" name="armor_y" value="{{ system.armor_y }}"
-                        onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                        onblur="checkFloat(this)" min="0.1" step="0.1" required />
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
                         <label for="armor_cap">Maximum achievable armor mitigation is </label>
                         <input type="number" id="armor_cap" name="armor_cap" value="{{ system.armor_cap }}"
-                        onblur="capCheck(this)" />
+                        onblur="capCheck(this)" min="1" required />
                         <label for="armor_cap">%, armor above that limit will have no effect.</label>
                     </td>
                 </tr>
@@ -805,7 +819,7 @@
                     <td>
                         <label for="armor_price">Arbitrary value of each point of armor: </label>
                         <input type="number" id="armor_price" name="armor_price" step="any" value="{{ system.armor_price }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" />
+                               onblur="checkInt(this)" required />
                     </td>
                 </tr>
             </table>

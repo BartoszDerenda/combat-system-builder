@@ -4,3 +4,70 @@
     justify-content: center;
     flex-direction: column;
 }
+
+#repeat-simulation {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+
+    margin: 50px;
+    width: 200px;
+    height: 50px;
+    font-size: 1.1em;
+
+    border: 1px outset white;
+}
+
+#repeat-simulation:hover {
+    transition: 0.2s;
+    background-color: #6872af;
+}
+
+.hero-turn {
+    background-color: rgb(71, 84, 134);
+    min-width: 70vw;
+    padding: 2%;
+}
+
+.enemy-turn {
+    background-color: rgb(103, 59, 59);
+    min-width: 70%;
+    padding: 2%;
+}
+
+.hero-victory {
+    background-color: rgb(81, 113, 220);
+    min-width: 70%;
+    padding: 2%;
+}
+
+.enemy-victory {
+    background-color: rgb(203, 69, 69);
+    min-width: 70%;
+    padding: 2%;
+}
+
+.physical-damage {
+    color: #ff0000;
+}
+
+.magical-damage {
+    color: #00c1ff;
+}
+
+.willpower-absorb {
+    color: #dd1fff;
+}
+
+.agility-dodge {
+    color: #ffc400;
+}
+
+.critical-effect {
+    color: #ffff00;
+}
+
+.charisma-effect {
+    color: #ff9900;
+}
