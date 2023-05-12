@@ -8,20 +8,61 @@
 {% block body %}
 
     <script>
-    let v = 1
+    let v1 = 1
+    let v0 = 0
+    let vFloat = 0.1
 
-        function checkIfNotNumberOrNegativeOrEmpty(i) {
+        function checkInt_min_1(i) {
             if (isNaN(parseInt(i.value))) {
-                i.value=v;
+                i.value=v1;
             }
-            else if(i.value < 0) {
+            else if(i.value <= 1) {
+                i.value=1;
+            }
+            else if (i.value === null) {
+                i.value=1;
+            }
+            else
+                v1=i.value;
+        }
+
+        function checkInt_min_0(i) {
+            if (isNaN(parseInt(i.value))) {
+                i.value=v0;
+            }
+            else if(i.value <= 0) {
                 i.value=0;
             }
             else if (i.value === null) {
                 i.value=1;
             }
             else
-                v=i.value;
+                v0=i.value;
+        }
+
+        function checkFloat(i) {
+            if (isNaN(parseInt(i.value))) {
+                i.value=vFloat;
+            }
+            else if(i.value <= 0.1) {
+                i.value=0.1;
+            }
+            else if (i.value === null) {
+                i.value=0.1;
+            }
+            else
+                vFloat=i.value;
+        }
+
+        function checkIfGreaterThan100(i) {
+            if (i.value > 100) {
+                i.value = 100
+            }
+        }
+
+        function capCheck(i) {
+            checkInt_min_1(i)
+            checkIfGreaterThan100(i)
         }
 
         function likelihoodBalance() {
@@ -61,13 +102,13 @@
                 <tr>
                     <td><label for="hero_name">Name</label></td>
                     <td class="tooltip">
-                        Combat value:
+                        <b>Combat value:</b>
                         <span class="hero-tooltip tooltip-text-combat-value">
-                            <b>Combat value</b> is the sum of the cost of all statistics.<br><br>
-                            It helps to measure which statistics are more valuable than others.<br><br>
+                            <b>Combat value</b> is the sum of the value of all statistics.<br><br>
+                            It helps in measuring which statistics are more valuable than others.<br><br>
                             In a well-balanced combat system, characters with similar combat value
-                                should have roughly the same chances of winning against each other,
-                                unless a counter-play to their strategy is applied.
+                            should have roughly the same chances of winning against each other,
+                            unless a counter-play to their strategy is applied.
                         </span>
                     </td>
                 </tr>
@@ -76,80 +117,205 @@
                     <td class="small-padding-bottom">{{ system.hero.total_value }}</td>
                 </tr>
                 <tr>
+                    <td rowspan="2" class="tooltip">
+                        <b>Attributes</b>
+                        <span class="hero-tooltip tooltip-text-attributes">
+                            <b>Attributes</b> describe the effectiveness of character in combat.<br><br>
+                            You can balance their properties in section "Ruleset".<br><br>
+                            Some attributes can be turned off by setting their value to 0.
+                        </span>
+                    </td>
+                </tr>
+                <tr>
                     <td><label for="hero_lvl">Level</label></td>
                     <td><input type="number" id="hero_lvl" name="hero_lvl" value="{{ system.hero.level }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_str">Strength</label></td>
                     <td><input type="number" id="hero_str" name="hero_str" value="{{ system.hero.strength }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_int">Intelligence</label></td>
                     <td><input type="number" id="hero_int" name="hero_int" value="{{ system.hero.intelligence }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_agi">Agility</label></td>
                     <td><input type="number" id="hero_agi" name="hero_agi" value="{{ system.hero.agility }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_will">Willpower</label></td>
                     <td><input type="number" id="hero_will" name="hero_will" value="{{ system.hero.willpower }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_end">Endurance</label></td>
                     <td><input type="number" id="hero_end" name="hero_end" value="{{ system.hero.endurance }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_char">Charisma</label></td>
                     <td><input type="number" id="hero_char" name="hero_char" value="{{ system.hero.charisma }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_lck">Luck</label></td>
                     <td><input type="number" id="hero_lck" name="hero_lck" value="{{ system.hero.luck }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="hero_spd">Speed</label></td>
                     <td><input type="number" id="hero_spd" name="hero_spd" value="{{ system.hero.speed }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
-                    <td><label for="hero_armor">Armor</label></td>
-                    <td><input type="number" id="hero_armor" name="hero_armor" value="{{ system.hero.armor }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                    <td class="small-padding-bottom"><label for="hero_armor">Armor</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="hero_armor" name="hero_armor" value="{{ system.hero.armor }}"
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
-                    <td class="small-padding-top tooltip">
-                        <label for="hero_likelihood_of_physical">Physical strike:</label>
+                    <td class="tooltip">
+                        <b>Priority</b>
                         <span class="hero-tooltip tooltip-text-likelihood">
-                            <b>Physical and magical chances</b> describe the frequency with which the character
-                            will use either a physical or magical attack.<br><br>
-                            To completely nullify the chance of either attack happening, you can set it's value
+                            <b>Priority</b> describes the frequency with which the character
+                            will use either a physical or magical attack based on the system of chance.<br><br>
+                            To completely nullify the chance of either attack happening, you can set its value
                             to zero.<br><br>
-                            Sum of both values must be equal to 100%, otherwise it will be set to default 50% - 50%.
+                            Sum of both values must be equal to 100%, otherwise it will be set to a default value.
                         </span>
                     </td>
-                    <td class="small-padding-top"><input type="number" id="hero_likelihood_of_physical" name="hero_likelihood_of_physical" value="{{ system.hero.likelihood_of_physical }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" max="100" required />%</td>
                 </tr>
                 <tr>
-                    <td class="small-padding-bottom"><label for="hero_likelihood_of_magical">Magical attack:</label></td>
-                    <td class="small-padding-bottom"><input type="number" id="hero_likelihood_of_magical" name="hero_likelihood_of_magical" value="{{ system.hero.likelihood_of_magical }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" max="100" required />%</td>
+                    <td><label for="hero_likelihood_of_physical">Physical strike</label></td>
+                    <td><input type="number" id="hero_likelihood_of_physical" class="input-chance" name="hero_likelihood_of_physical" value="{{ system.hero.likelihood_of_physical }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="hero_likelihood_of_magical">Magical attack</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="hero_likelihood_of_magical" class="input-chance" name="hero_likelihood_of_magical" value="{{ system.hero.likelihood_of_magical }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td class="tooltip">
+                        <b>Skills and Spells</b>
+                        <span class="hero-tooltip tooltip-text-skills">
+                            <b>Skills and Spells</b> let you create particular attacks that the character is going to use
+                            in battle.<br><br>
+                            Each attack has its own damage spread and chance of occurrence. Keep in mind that all
+                            occurrence chances in given physical or magical category must sum up to a total of
+                            100%, otherwise it will be set to a default value.
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_1_type">Attack type</label></td>
+                    <td><select id="hero_attack_1_type" name="hero_attack_1_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.hero.attack_1_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.hero.attack_1_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_1_name">Attack name</label></td>
+                    <td><input type="text" id="hero_attack_1_name" name="hero_attack_1_name" value="{{ system.hero.attack_1_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_1_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="hero_attack_1_min" class="input-damage-spread" name="hero_attack_1_min" value="{{ system.hero.attack_1_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="hero_attack_1_max"> - </label>
+                        <input type="number" id="hero_attack_1_max" class="input-damage-spread" name="hero_attack_1_max" value="{{ system.hero.attack_1_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="hero_attack_1_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="hero_attack_1_chance" class="input-chance" name="hero_attack_1_chance" value="{{ system.hero.attack_1_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_2_type">Attack type</label></td>
+                    <td><select id="hero_attack_2_type" name="hero_attack_2_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.hero.attack_2_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.hero.attack_2_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_2_name">Attack name</label></td>
+                    <td><input type="text" id="hero_attack_2_name" name="hero_attack_2_name" value="{{ system.hero.attack_2_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_2_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="hero_attack_2_min" class="input-damage-spread" name="hero_attack_2_min" value="{{ system.hero.attack_2_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="hero_attack_2_max"> - </label>
+                        <input type="number" id="hero_attack_2_max" class="input-damage-spread" name="hero_attack_2_max" value="{{ system.hero.attack_2_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="hero_attack_2_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="hero_attack_2_chance" class="input-chance" name="hero_attack_2_chance" value="{{ system.hero.attack_2_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_3_type">Attack type</label></td>
+                    <td><select id="hero_attack_3_type" name="hero_attack_3_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.hero.attack_3_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.hero.attack_3_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_3_name">Attack name</label></td>
+                    <td><input type="text" id="hero_attack_3_name" name="hero_attack_3_name" value="{{ system.hero.attack_3_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_3_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="hero_attack_3_min" class="input-damage-spread" name="hero_attack_3_min" value="{{ system.hero.attack_3_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="hero_attack_3_max"> - </label>
+                        <input type="number" id="hero_attack_3_max" class="input-damage-spread" name="hero_attack_3_max" value="{{ system.hero.attack_3_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="hero_attack_3_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="hero_attack_3_chance" class="input-chance" name="hero_attack_3_chance" value="{{ system.hero.attack_3_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_4_type">Attack type</label></td>
+                    <td><select id="hero_attack_4_type" name="hero_attack_4_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.hero.attack_4_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.hero.attack_4_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_4_name">Attack name</label></td>
+                    <td><input type="text" id="hero_attack_4_name" name="hero_attack_4_name" value="{{ system.hero.attack_4_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="hero_attack_4_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="hero_attack_4_min" class="input-damage-spread" name="hero_attack_4_min" value="{{ system.hero.attack_4_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="hero_attack_4_max"> - </label>
+                        <input type="number" id="hero_attack_4_max" class="input-damage-spread" name="hero_attack_4_max" value="{{ system.hero.attack_4_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="hero_attack_4_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="hero_attack_4_chance" class="input-chance" name="hero_attack_4_chance" value="{{ system.hero.attack_4_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
                 </tr>
                 <tr>
                     <td class="hero-td-category">
                         <p>Physical attack: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.physical_min }} - {{ system.hero.physical_max }}
+                        {{ system.hero.physical_damage }}
                     </td>
                 </tr>
                 <tr>
@@ -157,7 +323,7 @@
                         <p>Magical attack: </p>
                     </td>
                     <td class="hero-td-value">
-                        {{ system.hero.magical_min }} - {{ system.hero.magical_max }}
+                        {{ system.hero.magical_damage}}
                     </td>
                 </tr>
                 <tr>
@@ -227,10 +393,10 @@
                 <tr>
                     <td><label for="enemy_name">Name</label></td>
                     <td class="tooltip">
-                        Combat value:
+                        <b>Combat value:</b>
                         <span class="enemy-tooltip tooltip-text-combat-value">
-                            <b>Combat value</b> is the sum of the cost of all statistics.<br><br>
-                            It helps to measure which statistics are more valuable than others.<br><br>
+                            <b>Combat value</b> is the sum of the value of all statistics.<br><br>
+                            It helps in measuring which statistics are more valuable than others.<br><br>
                             In a well-balanced combat system, characters with similar combat value
                                 should have roughly the same chances of winning against each other,
                                 unless a counter-play to their strategy is applied.
@@ -242,80 +408,205 @@
                     <td class="small-padding-bottom">{{ system.enemy.total_value }}</td>
                 </tr>
                 <tr>
+                    <td rowspan="2" class="tooltip">
+                        <b>Attributes</b>
+                        <span class="enemy-tooltip tooltip-text-attributes">
+                            <b>Attributes</b> describe the effectiveness of character in combat.<br><br>
+                            You can balance their properties in section "Ruleset".<br><br>
+                            Some attributes can be turned off by setting their value to 0.
+                        </span>
+                    </td>
+                </tr>
+                <tr>
                     <td><label for="enemy_lvl">Level</label></td>
                     <td><input type="number" id="enemy_lvl" name="enemy_lvl" value="{{ system.enemy.level }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_str">Strength</label></td>
                     <td><input type="number" id="enemy_str" name="enemy_str" value="{{ system.enemy.strength }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_int">Intelligence</label></td>
                     <td><input type="number" id="enemy_int" name="enemy_int" value="{{ system.enemy.intelligence }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_agi">Agility</label></td>
                     <td><input type="number" id="enemy_agi" name="enemy_agi" value="{{ system.enemy.agility }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_will">Willpower</label></td>
                     <td><input type="number" id="enemy_will" name="enemy_will" value="{{ system.enemy.willpower }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_end">Endurance</label></td>
                     <td><input type="number" id="enemy_end" name="enemy_end" value="{{ system.enemy.endurance }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_char">Charisma</label></td>
                     <td><input type="number" id="enemy_char" name="enemy_char" value="{{ system.enemy.charisma }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_lck">Luck</label></td>
                     <td><input type="number" id="enemy_lck" name="enemy_lck" value="{{ system.enemy.luck }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                               onblur="checkInt_min_0(this)" min="0" required /></td>
                 </tr>
                 <tr>
                     <td><label for="enemy_spd">Speed</label></td>
                     <td><input type="number" id="enemy_spd" name="enemy_spd" value="{{ system.enemy.speed }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" required /></td>
+                               onblur="checkInt_min_1(this)" min="1" required /></td>
                 </tr>
                 <tr>
-                    <td><label for="enemy_armor">Armor</label></td>
-                    <td><input type="number" id="enemy_armor" name="enemy_armor" value="{{ system.enemy.armor }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="0" required /></td>
+                    <td class="small-padding-bottom"><label for="enemy_armor">Armor</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="enemy_armor" name="enemy_armor" value="{{ system.enemy.armor }}"
+                               onblur="checkInt_min_1(this)" min="0" required /></td>
                 </tr>
                 <tr>
-                    <td class="small-padding-top tooltip">
-                        <label for="enemy_likelihood_of_physical">Physical strike:</label>
+                    <td class="tooltip">
+                        <b>Priority</b>
                         <span class="enemy-tooltip tooltip-text-likelihood">
-                            <b>Physical and magical chances</b> describe the frequency with which the character
-                            will use either a physical or magical attack.<br><br>
-                            To completely nullify the chance of either attack happening, you can set it's value
+                            <b>Priority</b> describes the frequency with which the character
+                            will use either a physical or magical attack based on the system of chance.<br><br>
+                            To completely nullify the chance of either attack happening, you can set its value
                             to zero.<br><br>
-                            Sum of both values must be equal to 100%, otherwise it will be set to default 50% - 50%.
+                            Sum of both values must be equal to 100%, otherwise it will be set to a default value.
                         </span>
                     </td>
-                    <td class="small-padding-top"><input type="number" id="enemy_likelihood_of_physical" name="enemy_likelihood_of_physical" value="{{ system.enemy.likelihood_of_physical }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" max="100" required />%</td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_likelihood_of_physical">Physical strike:</label></td>
+                    <td><input type="number" id="enemy_likelihood_of_physical" class="input-chance" name="enemy_likelihood_of_physical" value="{{ system.enemy.likelihood_of_physical }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
                 </tr>
                 <tr>
                     <td class="small-padding-bottom"><label for="enemy_likelihood_of_magical">Magical attack:</label></td>
-                    <td class="small-padding-bottom"><input type="number" id="enemy_likelihood_of_magical" name="enemy_likelihood_of_magical" value="{{ system.enemy.likelihood_of_magical }}"
-                               onblur="checkIfNotNumberOrNegativeOrEmpty(this)" min="1" max="100" required />%</td>
+                    <td class="small-padding-bottom"><input type="number" id="enemy_likelihood_of_magical" class="input-chance" name="enemy_likelihood_of_magical" value="{{ system.enemy.likelihood_of_magical }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td class="tooltip">
+                        <b>Skills and Spells</b>
+                        <span class="enemy-tooltip tooltip-text-skills">
+                            <b>Skills and Spells</b> let you create particular attacks that the character is going to use
+                            in battle.<br><br>
+                            Each attack has its own damage spread and chance of occurrence. Keep in mind that all
+                            occurrence chances in given physical or magical category must sum up to a total of
+                            100%, otherwise it will be set to a default value.
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_1_type">Attack type</label></td>
+                    <td><select id="enemy_attack_1_type" name="enemy_attack_1_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.enemy.attack_1_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.enemy.attack_1_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_1_name">Attack name</label></td>
+                    <td><input type="text" id="enemy_attack_1_name" name="enemy_attack_1_name" value="{{ system.enemy.attack_1_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_1_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="enemy_attack_1_min" class="input-damage-spread" name="enemy_attack_1_min" value="{{ system.enemy.attack_1_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="enemy_attack_1_max"> - </label>
+                        <input type="number" id="enemy_attack_1_max" class="input-damage-spread" name="enemy_attack_1_max" value="{{ system.enemy.attack_1_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="enemy_attack_1_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="enemy_attack_1_chance" class="input-chance" name="enemy_attack_1_chance" value="{{ system.enemy.attack_1_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_2_type">Attack type</label></td>
+                    <td><select id="enemy_attack_2_type" name="enemy_attack_2_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.enemy.attack_2_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.enemy.attack_2_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_2_name">Attack name</label></td>
+                    <td><input type="text" id="enemy_attack_2_name" name="enemy_attack_2_name" value="{{ system.enemy.attack_2_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_2_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="enemy_attack_2_min" class="input-damage-spread" name="enemy_attack_2_min" value="{{ system.enemy.attack_2_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="enemy_attack_2_max"> - </label>
+                        <input type="number" id="enemy_attack_2_max" class="input-damage-spread" name="enemy_attack_2_max" value="{{ system.enemy.attack_2_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="enemy_attack_2_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="enemy_attack_2_chance" class="input-chance" name="enemy_attack_2_chance" value="{{ system.enemy.attack_2_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_3_type">Attack type</label></td>
+                    <td><select id="enemy_attack_3_type" name="enemy_attack_3_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.enemy.attack_3_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.enemy.attack_3_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_3_name">Attack name</label></td>
+                    <td><input type="text" id="enemy_attack_3_name" name="enemy_attack_3_name" value="{{ system.enemy.attack_3_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_3_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="enemy_attack_3_min" class="input-damage-spread" name="enemy_attack_3_min" value="{{ system.enemy.attack_3_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="enemy_attack_3_max"> - </label>
+                        <input type="number" id="enemy_attack_3_max" class="input-damage-spread" name="enemy_attack_3_max" value="{{ system.enemy.attack_3_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="enemy_attack_3_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="enemy_attack_3_chance" class="input-chance" name="enemy_attack_3_chance" value="{{ system.enemy.attack_3_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_4_type">Attack type</label></td>
+                    <td><select id="enemy_attack_4_type" name="enemy_attack_4_type" form="stat-sheet-grid">
+                        <option value="physical" {% if system.enemy.attack_4_type == "physical" %}selected{% endif %}>Physical</option>
+                        <option value="magical" {% if system.enemy.attack_4_type == "magical" %}selected{% endif %}>Magical</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_4_name">Attack name</label></td>
+                    <td><input type="text" id="enemy_attack_4_name" name="enemy_attack_4_name" value="{{ system.enemy.attack_4_name }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="enemy_attack_4_min">Damage spread</label></td>
+                    <td>
+                        <input type="number" id="enemy_attack_4_min" class="input-damage-spread" name="enemy_attack_4_min" value="{{ system.enemy.attack_4_min }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required />
+                        <label for="enemy_attack_4_max"> - </label>
+                        <input type="number" id="enemy_attack_4_max" class="input-damage-spread" name="enemy_attack_4_max" value="{{ system.enemy.attack_4_max }}"
+                               onblur="checkFloat(this)" step="0.1" min="0.1" required /></td>
+                </tr>
+                <tr>
+                    <td class="small-padding-bottom"><label for="enemy_attack_4_chance">Chance of occurring</label></td>
+                    <td class="small-padding-bottom"><input type="number" id="enemy_attack_4_chance" class="input-chance" name="enemy_attack_4_chance" value="{{ system.enemy.attack_4_chance }}"
+                               onblur="checkInt_min_0(this)" min="0" max="100" required /> %</td>
                 </tr>
                 <tr>
                     <td class="enemy-td-category">
                         <p>Physical attack: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.physical_min }} - {{ system.enemy.physical_max }}
+                        {{ system.enemy.physical_damage }}
                     </td>
                 </tr>
                 <tr>
@@ -323,7 +614,7 @@
                         <p>Magical attack: </p>
                     </td>
                     <td class="enemy-td-value">
-                        {{ system.enemy.magical_min }} - {{ system.enemy.magical_max }}
+                        {{ system.enemy.magical_damage }}
                     </td>
                 </tr>
                 <tr>

@@ -28,9 +28,25 @@ td {
     width: 165px;
 }
 
-input {
-    width: 125px;
+input, select {
+    width: 141px;
     background-color: #33385b;
+}
+
+.input-damage-spread {
+    width: 64px;
+}
+
+.input-chance {
+    width: 125px;
+}
+
+.small-padding-top {
+    padding-top: 30px;
+}
+
+.small-padding-bottom {
+    padding-bottom: 30px;
 }
 
 .tooltip {
@@ -58,11 +74,11 @@ input {
     /* Tooltip text position */
     position: absolute;
     z-index: 1;
-    top: 20px;
+    top: 50px;
     right: -2%;
 }
 
-.tooltip-text-likelihood {
+.tooltip-text-attributes, .tooltip-text-likelihood, .tooltip-text-skills {
     visibility: hidden;
 
     padding: 10px;
@@ -72,20 +88,15 @@ input {
     /* Tooltip text position */
     position: absolute;
     z-index: 1;
-    top: 90px;
-    right: -2%;
+    top: 30px;
+    right: -45%;
 }
 
-.tooltip:hover .tooltip-text-likelihood, .tooltip:hover .tooltip-text-combat-value {
+.tooltip:hover .tooltip-text-combat-value,
+.tooltip:hover .tooltip-text-attributes,
+.tooltip:hover .tooltip-text-likelihood,
+.tooltip:hover .tooltip-text-skills {
     visibility: visible;
-}
-
-.small-padding-top {
-    padding-top: 30px;
-}
-
-.small-padding-bottom {
-    padding-bottom: 30px;
 }
 
 .hero-stat-sheet-table > table {
@@ -134,7 +145,7 @@ input {
     background-color: #6872af;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 900px) {
     #stat-sheet-grid {
         display: grid;
         grid-template-columns: 1fr;

@@ -18,6 +18,8 @@ class Fighter:
             self.name = 'Hero'
         else:
             self.name = 'Enemy'
+
+        # Attributes
         self.level = 1
         self.strength = 1
         self.intelligence = 1
@@ -32,10 +34,34 @@ class Fighter:
         self.likelihood_of_magical = 50
         self.total_value = 0
 
-        self.physical_min = 0
-        self.physical_max = 0
-        self.magical_min = 0
-        self.magical_max = 0
+        # Skills and Spells
+        self.attack_1_type = "physical"
+        self.attack_1_name = "Slam"
+        self.attack_1_min = 1.0
+        self.attack_1_max = 1.2
+        self.attack_1_chance = 50
+
+        self.attack_2_type = "physical"
+        self.attack_2_name = "Shield Bash"
+        self.attack_2_min = 0.9
+        self.attack_2_max = 1.3
+        self.attack_2_chance = 50
+
+        self.attack_3_type = "magical"
+        self.attack_3_name = "Fireball"
+        self.attack_3_min = 0.9
+        self.attack_3_max = 1.3
+        self.attack_3_chance = 50
+
+        self.attack_4_type = "magical"
+        self.attack_4_name = "Arcane Blast"
+        self.attack_4_min = 0.5
+        self.attack_4_max = 1.5
+        self.attack_4_chance = 50
+
+        # Summary
+        self.physical_damage = 0
+        self.magical_damage = 0
         self.dodge_chance = 0
         self.resistance = 0
         self.hitpoints = 0
@@ -143,7 +169,7 @@ def attribute_calculator(attribute, attribute_math, attribute_x, attribute_y):
         effect_chance = round(
             (math.log(attribute, attribute_y) * 10), 1)
     elif attribute_math == 5:
-        effect_chance = round(attribute/attribute_y)
+        effect_chance = round(attribute / attribute_y)
     else:
         effect_chance = 0
 
@@ -227,15 +253,116 @@ def set_stats():
         system.hero.armor = 0
 
     if request.form.get("hero_likelihood_of_physical") != '' and int(
-            request.form.get("hero_likelihood_of_physical")) > 0:
+            request.form.get("hero_likelihood_of_physical")) >= 0:
         system.hero.likelihood_of_physical = int(request.form.get("hero_likelihood_of_physical"))
     else:
         system.hero.likelihood_of_physical = 50
 
-    if request.form.get("hero_likelihood_of_magical") != '' and int(request.form.get("hero_likelihood_of_magical")) > 0:
+    if request.form.get("hero_likelihood_of_magical") != '' and int(
+            request.form.get("hero_likelihood_of_magical")) >= 0:
         system.hero.likelihood_of_magical = int(request.form.get("hero_likelihood_of_magical"))
     else:
         system.hero.likelihood_of_magical = 50
+
+    if request.form.get("hero_attack_1_type") != '':
+        system.hero.attack_1_type = str(request.form.get("hero_attack_1_type"))
+    else:
+        system.hero.attack_1_type = "physical"
+
+    if request.form.get("hero_attack_1_name") != '':
+        system.hero.attack_1_name = str(request.form.get("hero_attack_1_name"))
+    else:
+        system.hero.attack_1_name = "Default Attack"
+
+    if request.form.get("hero_attack_1_min") != '' and float(request.form.get("hero_attack_1_min")) >= 0.1:
+        system.hero.attack_1_min = float(request.form.get("hero_attack_1_min"))
+    else:
+        system.hero.attack_1_min = 0.1
+
+    if request.form.get("hero_attack_1_max") != '' and float(request.form.get("hero_attack_1_max")) >= 0.2:
+        system.hero.attack_1_max = float(request.form.get("hero_attack_1_max"))
+    else:
+        system.hero.attack_1_max = 0.2
+
+    if request.form.get("hero_attack_1_chance") != '' and int(request.form.get("hero_attack_1_chance")) >= 0:
+        system.hero.attack_1_chance = int(request.form.get("hero_attack_1_chance"))
+    else:
+        system.hero.attack_1_chance = 50
+
+    if request.form.get("hero_attack_2_type") != '':
+        system.hero.attack_2_type = str(request.form.get("hero_attack_2_type"))
+    else:
+        system.hero.attack_2_type = "physical"
+
+    if request.form.get("hero_attack_2_name") != '':
+        system.hero.attack_2_name = str(request.form.get("hero_attack_2_name"))
+    else:
+        system.hero.attack_2_name = "Default Attack"
+
+    if request.form.get("hero_attack_2_min") != '' and float(request.form.get("hero_attack_2_min")) >= 0.1:
+        system.hero.attack_2_min = float(request.form.get("hero_attack_2_min"))
+    else:
+        system.hero.attack_2_min = 0.1
+
+    if request.form.get("hero_attack_2_max") != '' and float(request.form.get("hero_attack_2_max")) >= 0.2:
+        system.hero.attack_2_max = float(request.form.get("hero_attack_2_max"))
+    else:
+        system.hero.attack_2_max = 0.2
+
+    if request.form.get("hero_attack_2_chance") != '' and int(request.form.get("hero_attack_2_chance")) >= 0:
+        system.hero.attack_2_chance = int(request.form.get("hero_attack_2_chance"))
+    else:
+        system.hero.attack_2_chance = 50
+
+    if request.form.get("hero_attack_3_type") != '':
+        system.hero.attack_3_type = str(request.form.get("hero_attack_3_type"))
+    else:
+        system.hero.attack_3_type = "magical"
+
+    if request.form.get("hero_attack_3_name") != '':
+        system.hero.attack_3_name = str(request.form.get("hero_attack_3_name"))
+    else:
+        system.hero.attack_3_name = "Default Attack"
+
+    if request.form.get("hero_attack_3_min") != '' and float(request.form.get("hero_attack_3_min")) >= 0.1:
+        system.hero.attack_3_min = float(request.form.get("hero_attack_3_min"))
+    else:
+        system.hero.attack_3_min = 0.1
+
+    if request.form.get("hero_attack_3_max") != '' and float(request.form.get("hero_attack_3_max")) >= 0.2:
+        system.hero.attack_3_max = float(request.form.get("hero_attack_3_max"))
+    else:
+        system.hero.attack_3_max = 0.2
+
+    if request.form.get("hero_attack_3_chance") != '' and int(request.form.get("hero_attack_3_chance")) >= 0:
+        system.hero.attack_3_chance = int(request.form.get("hero_attack_3_chance"))
+    else:
+        system.hero.attack_3_chance = 50
+
+    if request.form.get("hero_attack_4_type") != '':
+        system.hero.attack_4_type = str(request.form.get("hero_attack_4_type"))
+    else:
+        system.hero.attack_4_type = "magical"
+
+    if request.form.get("hero_attack_4_name") != '':
+        system.hero.attack_4_name = str(request.form.get("hero_attack_4_name"))
+    else:
+        system.hero.attack_4_name = "Default Attack"
+
+    if request.form.get("hero_attack_4_min") != '' and float(request.form.get("hero_attack_4_min")) >= 0.1:
+        system.hero.attack_4_min = float(request.form.get("hero_attack_4_min"))
+    else:
+        system.hero.attack_4_min = 0.1
+
+    if request.form.get("hero_attack_4_max") != '' and float(request.form.get("hero_attack_4_max")) >= 0.2:
+        system.hero.attack_4_max = float(request.form.get("hero_attack_4_max"))
+    else:
+        system.hero.attack_4_max = 0.2
+
+    if request.form.get("hero_attack_4_chance") != '' and int(request.form.get("hero_attack_4_chance")) >= 0:
+        system.hero.attack_4_chance = int(request.form.get("hero_attack_4_chance"))
+    else:
+        system.hero.attack_4_chance = 50
 
     system.hero.total_value = \
         system.strength_price * system.hero.strength + \
@@ -305,16 +432,116 @@ def set_stats():
         system.enemy.armor = 0
 
     if request.form.get("enemy_likelihood_of_physical") != '' and int(
-            request.form.get("enemy_likelihood_of_physical")) > 0:
+            request.form.get("enemy_likelihood_of_physical")) >= 0:
         system.enemy.likelihood_of_physical = int(request.form.get("enemy_likelihood_of_physical"))
     else:
         system.enemy.likelihood_of_physical = 50
 
     if request.form.get("enemy_likelihood_of_magical") != '' and int(
-            request.form.get("enemy_likelihood_of_magical")) > 0:
+            request.form.get("enemy_likelihood_of_magical")) >= 0:
         system.enemy.likelihood_of_magical = int(request.form.get("enemy_likelihood_of_magical"))
     else:
         system.enemy.likelihood_of_magical = 50
+
+    if request.form.get("enemy_attack_1_type") != '':
+        system.enemy.attack_1_type = str(request.form.get("enemy_attack_1_type"))
+    else:
+        system.enemy.attack_1_type = "physical"
+
+    if request.form.get("enemy_attack_1_name") != '':
+        system.enemy.attack_1_name = str(request.form.get("enemy_attack_1_name"))
+    else:
+        system.enemy.attack_1_name = "Default Attack"
+
+    if request.form.get("enemy_attack_1_min") != '' and float(request.form.get("enemy_attack_1_min")) >= 0.1:
+        system.enemy.attack_1_min = float(request.form.get("enemy_attack_1_min"))
+    else:
+        system.enemy.attack_1_min = 0.1
+
+    if request.form.get("enemy_attack_1_max") != '' and float(request.form.get("enemy_attack_1_max")) >= 0.2:
+        system.enemy.attack_1_max = float(request.form.get("enemy_attack_1_max"))
+    else:
+        system.enemy.attack_1_max = 0.2
+
+    if request.form.get("enemy_attack_1_chance") != '' and int(request.form.get("enemy_attack_1_chance")) >= 0:
+        system.enemy.attack_1_chance = int(request.form.get("enemy_attack_1_chance"))
+    else:
+        system.enemy.attack_1_chance = 50
+
+    if request.form.get("enemy_attack_2_type") != '':
+        system.enemy.attack_2_type = str(request.form.get("enemy_attack_2_type"))
+    else:
+        system.enemy.attack_2_type = "physical"
+
+    if request.form.get("enemy_attack_2_name") != '':
+        system.enemy.attack_2_name = str(request.form.get("enemy_attack_2_name"))
+    else:
+        system.enemy.attack_2_name = "Default Attack"
+
+    if request.form.get("enemy_attack_2_min") != '' and float(request.form.get("enemy_attack_2_min")) >= 0.1:
+        system.enemy.attack_2_min = float(request.form.get("enemy_attack_2_min"))
+    else:
+        system.enemy.attack_2_min = 0.1
+
+    if request.form.get("enemy_attack_2_max") != '' and float(request.form.get("enemy_attack_2_max")) >= 0.2:
+        system.enemy.attack_2_max = float(request.form.get("enemy_attack_2_max"))
+    else:
+        system.enemy.attack_2_max = 0.2
+
+    if request.form.get("enemy_attack_2_chance") != '' and int(request.form.get("enemy_attack_2_chance")) >= 0:
+        system.enemy.attack_2_chance = int(request.form.get("enemy_attack_2_chance"))
+    else:
+        system.enemy.attack_2_chance = 50
+
+    if request.form.get("enemy_attack_3_type") != '':
+        system.enemy.attack_3_type = str(request.form.get("enemy_attack_3_type"))
+    else:
+        system.enemy.attack_3_type = "magical"
+
+    if request.form.get("enemy_attack_3_name") != '':
+        system.enemy.attack_3_name = str(request.form.get("enemy_attack_3_name"))
+    else:
+        system.enemy.attack_3_name = "Default Attack"
+
+    if request.form.get("enemy_attack_3_min") != '' and float(request.form.get("enemy_attack_3_min")) >= 0.1:
+        system.enemy.attack_3_min = float(request.form.get("enemy_attack_3_min"))
+    else:
+        system.enemy.attack_3_min = 0.1
+
+    if request.form.get("enemy_attack_3_max") != '' and float(request.form.get("enemy_attack_3_max")) >= 0.2:
+        system.enemy.attack_3_max = float(request.form.get("enemy_attack_3_max"))
+    else:
+        system.enemy.attack_3_max = 0.2
+
+    if request.form.get("enemy_attack_3_chance") != '' and int(request.form.get("enemy_attack_3_chance")) >= 0:
+        system.enemy.attack_3_chance = int(request.form.get("enemy_attack_3_chance"))
+    else:
+        system.enemy.attack_3_chance = 50
+
+    if request.form.get("enemy_attack_4_type") != '':
+        system.enemy.attack_4_type = str(request.form.get("enemy_attack_4_type"))
+    else:
+        system.enemy.attack_4_type = "magical"
+
+    if request.form.get("enemy_attack_4_name") != '':
+        system.enemy.attack_4_name = str(request.form.get("enemy_attack_4_name"))
+    else:
+        system.enemy.attack_4_name = "Default Attack"
+
+    if request.form.get("enemy_attack_4_min") != '' and float(request.form.get("enemy_attack_4_min")) >= 0.1:
+        system.enemy.attack_4_min = float(request.form.get("enemy_attack_4_min"))
+    else:
+        system.enemy.attack_4_min = 0.1
+
+    if request.form.get("enemy_attack_4_max") != '' and float(request.form.get("enemy_attack_4_max")) >= 0.2:
+        system.enemy.attack_4_max = float(request.form.get("enemy_attack_4_max"))
+    else:
+        system.enemy.attack_4_max = 0.2
+
+    if request.form.get("enemy_attack_4_chance") != '' and int(request.form.get("enemy_attack_4_chance")) >= 0:
+        system.enemy.attack_4_chance = int(request.form.get("enemy_attack_4_chance"))
+    else:
+        system.enemy.attack_4_chance = 50
 
     system.enemy.total_value = \
         system.strength_price * system.enemy.strength + \
@@ -328,11 +555,8 @@ def set_stats():
         system.armor_price * system.enemy.armor
 
     # Hero extras
-    system.hero.physical_min = round(system.hero.strength * system.strength_dmg * system.strength_min)
-    system.hero.physical_max = round(system.hero.strength * system.strength_dmg * system.strength_max)
-
-    system.hero.magical_min = round(system.hero.intelligence * system.intelligence_dmg * system.intelligence_min)
-    system.hero.magical_max = round(system.hero.intelligence * system.intelligence_dmg * system.intelligence_max)
+    system.hero.physical_damage = system.hero.strength * system.strength_dmg
+    system.hero.magical_damage = system.hero.intelligence * system.intelligence_dmg
 
     system.hero.dodge_chance = attribute_calculator(system.hero.agility, system.agility_math, system.agility_x,
                                                     system.agility_y)
@@ -362,11 +586,8 @@ def set_stats():
             system.hero.armor_mitigation = system.armor_cap
 
     # Enemy extras
-    system.enemy.physical_min = round(system.enemy.strength * system.strength_dmg * system.strength_min)
-    system.enemy.physical_max = round(system.enemy.strength * system.strength_dmg * system.strength_max)
-
-    system.enemy.magical_min = round(system.enemy.intelligence * system.intelligence_dmg * system.intelligence_min)
-    system.enemy.magical_max = round(system.enemy.intelligence * system.intelligence_dmg * system.intelligence_max)
+    system.enemy.physical_damage = system.enemy.strength * system.strength_dmg
+    system.enemy.magical_damage = system.enemy.intelligence * system.intelligence_dmg
 
     system.enemy.dodge_chance = attribute_calculator(system.enemy.agility, system.agility_math, system.agility_x,
                                                      system.agility_y)
@@ -701,7 +922,8 @@ def simulation():
     hero_speed_base = system.hero.speed
     enemy_speed_base = system.enemy.speed
     damage = 0
-    attack_type = 0
+    attack_type = 'Default'
+    attack_name = 'Default'
     hero_charisma_buff = False
     hero_buff = 0.0
     enemy_charisma_buff = False
@@ -715,20 +937,131 @@ def simulation():
     dodged = False
     absorption = False
 
-    def attack_choice(token, damage_input, attack_type_output):
+    # The following is the most abhorrent piece of code I have ever written.
+    # It came from pilled up decisions that got implemented in HTML
+    # but were not properly thought through in terms of backend.
+    def attack_choice(token, damage_input, attack_name_output):
         chance_physical = getattr(getattr(system, token), "likelihood_of_physical")
-        strength_stat = getattr(getattr(system, token), "strength")
-        intelligence_stat = getattr(getattr(system, token), "intelligence")
-        if chance_physical <= random.randint(1, 100):
-            damage_input = (random.randint(system.strength_min * 10,
-                                           system.strength_max * 10) * strength_stat * system.strength_dmg) / 10
+        physical_damage = getattr(getattr(system, token), "physical_damage")
+        magical_damage = getattr(getattr(system, token), "magical_damage")
+
+        attack_1_type = getattr(getattr(system, token), "attack_1_type")
+        attack_1_name = getattr(getattr(system, token), "attack_1_name")
+        attack_1_min = getattr(getattr(system, token), "attack_1_min")
+        attack_1_max = getattr(getattr(system, token), "attack_1_max")
+        attack_1_chance = getattr(getattr(system, token), "attack_1_chance")
+
+        attack_2_type = getattr(getattr(system, token), "attack_2_type")
+        attack_2_name = getattr(getattr(system, token), "attack_2_name")
+        attack_2_min = getattr(getattr(system, token), "attack_2_min")
+        attack_2_max = getattr(getattr(system, token), "attack_2_max")
+        attack_2_chance = getattr(getattr(system, token), "attack_2_chance")
+
+        attack_3_type = getattr(getattr(system, token), "attack_3_type")
+        attack_3_name = getattr(getattr(system, token), "attack_3_name")
+        attack_3_min = getattr(getattr(system, token), "attack_3_min")
+        attack_3_max = getattr(getattr(system, token), "attack_3_max")
+        attack_3_chance = getattr(getattr(system, token), "attack_3_chance")
+
+        attack_4_type = getattr(getattr(system, token), "attack_4_type")
+        attack_4_name = getattr(getattr(system, token), "attack_4_name")
+        attack_4_min = getattr(getattr(system, token), "attack_4_min")
+        attack_4_max = getattr(getattr(system, token), "attack_4_max")
+        attack_4_chance = getattr(getattr(system, token), "attack_4_chance")
+
+        physical_attack_chances = []
+        magical_attack_chances = []
+        if attack_1_type == "physical":
+            physical_attack_chances.append(attack_1_chance)
+            magical_attack_chances.append(0)
+        else:
+            magical_attack_chances.append(attack_1_chance)
+            physical_attack_chances.append(0)
+        if attack_2_type == "physical":
+            physical_attack_chances.append(attack_2_chance)
+            magical_attack_chances.append(0)
+        else:
+            magical_attack_chances.append(attack_2_chance)
+            physical_attack_chances.append(0)
+        if attack_3_type == "physical":
+            physical_attack_chances.append(attack_3_chance)
+            magical_attack_chances.append(0)
+        else:
+            magical_attack_chances.append(attack_3_chance)
+            physical_attack_chances.append(0)
+        if attack_4_type == "physical":
+            physical_attack_chances.append(attack_4_chance)
+            magical_attack_chances.append(0)
+        else:
+            magical_attack_chances.append(attack_4_chance)
+            physical_attack_chances.append(0)
+
+        if chance_physical >= random.randint(1, 100):
+            roll = random.randint(1, 100)
+            if attack_1_type == "physical" and physical_attack_chances[0] >= roll:
+                damage_input = (random.randint(attack_1_min * 1000,
+                                               attack_1_max * 1000) * physical_damage) / 1000
+                attack_name_output = attack_1_name
+
+            elif attack_2_type == "physical" and \
+                    physical_attack_chances[0] + \
+                    physical_attack_chances[1] >= roll:
+                damage_input = (random.randint(attack_2_min * 1000,
+                                               attack_2_max * 1000) * physical_damage) / 1000
+                attack_name_output = attack_2_name
+
+            elif attack_3_type == "physical" and \
+                    physical_attack_chances[0] + \
+                    physical_attack_chances[1] + \
+                    physical_attack_chances[2] >= roll:
+                damage_input = (random.randint(attack_3_min * 1000,
+                                               attack_3_max * 1000) * physical_damage) / 1000
+                attack_name_output = attack_3_name
+
+            elif attack_4_type == "physical" and \
+                    physical_attack_chances[0] + \
+                    physical_attack_chances[1] + \
+                    physical_attack_chances[2] + \
+                    physical_attack_chances[3] >= roll:
+                damage_input = (random.randint(attack_4_min * 1000,
+                                               attack_4_max * 1000) * physical_damage) / 1000
+                attack_name_output = attack_4_name
+
             attack_type_output = "physical"
         else:
-            damage_input = (random.randint(system.intelligence_min * 10,
-                                           system.intelligence_max * 10) * intelligence_stat * system.intelligence_dmg) / 10
+            roll = random.randint(1, 100)
+            if attack_1_type == "magical" and magical_attack_chances[0] >= roll:
+                damage_input = (random.randint(attack_1_min * 1000,
+                                               attack_1_max * 1000) * magical_damage) / 1000
+                attack_name_output = attack_1_name
+
+            elif attack_2_type == "magical" and \
+                    magical_attack_chances[0] + \
+                    magical_attack_chances[1] >= roll:
+                damage_input = (random.randint(attack_2_min * 1000,
+                                               attack_2_max * 1000) * magical_damage) / 1000
+                attack_name_output = attack_2_name
+
+            elif attack_3_type == "magical" and \
+                    magical_attack_chances[0] + \
+                    magical_attack_chances[1] + \
+                    magical_attack_chances[2] >= roll:
+                damage_input = (random.randint(attack_3_min * 1000,
+                                               attack_3_max * 1000) * magical_damage) / 1000
+                attack_name_output = attack_3_name
+
+            elif attack_4_type == "magical" and \
+                    magical_attack_chances[0] + \
+                    magical_attack_chances[1] + \
+                    magical_attack_chances[2] + \
+                    magical_attack_chances[3] >= roll:
+                damage_input = (random.randint(attack_4_min * 1000,
+                                               attack_4_max * 1000) * magical_damage) / 1000
+                attack_name_output = attack_4_name
+
             attack_type_output = "magical"
 
-        return damage_input, attack_type_output
+        return damage_input, attack_type_output, attack_name_output
 
     def critical_chance(token, damage_input, critical_state):
         crit_chance = getattr(getattr(system, token), "critical_chance")
@@ -774,7 +1107,7 @@ def simulation():
         turn = ""
         if hero_speed_base >= enemy_speed_base:
 
-            damage, attack_type = attack_choice("hero", damage, attack_type)
+            damage, attack_type, attack_name = attack_choice("hero", damage, attack_name)
 
             if hero_charisma_buff:
                 damage *= ((100 + hero_buff) / 100)
@@ -793,14 +1126,15 @@ def simulation():
 
             turn += '<div class="hero-turn">'
             if dodged:
-                turn += system.hero.name + ' attacks the opponent but he manages to <span class="agility-dodge">dodge the attack!</span>'
+                turn += system.hero.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
+                                                                    'class="agility-dodge">dodge the attack!</span> '
                 dodged = False
             else:
                 if attack_type == 'physical':
-                    turn += system.hero.name + ' strikes the opponent dealing <span class="physical-damage">' + str(
-                        damage) + ' damage!</span>'
+                    turn += system.hero.name + ' strikes with ' + attack_name + ' dealing ' \
+                                                '<span class="physical-damage">' + str(damage) + ' damage!</span>'
                 else:
-                    turn += system.hero.name + ' slings a spell at the opponent dealing <span class="magical-damage">' + str(
+                    turn += system.hero.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
                         damage) + ' damage!</span>'
 
                 if critical:
@@ -831,7 +1165,7 @@ def simulation():
 
         else:
 
-            damage, attack_type = attack_choice("enemy", damage, attack_type)
+            damage, attack_type, attack_name = attack_choice("enemy", damage, attack_name)
 
             if enemy_charisma_buff:
                 damage *= ((100 + enemy_buff) / 100)
@@ -850,14 +1184,15 @@ def simulation():
 
             turn += '<div class="enemy-turn">'
             if dodged:
-                turn += system.enemy.name + ' attacks the opponent but he manages to <span class="agility-dodge">dodge the attack!</span>'
+                turn += system.enemy.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
+                                                                    'class="agility-dodge">dodge the attack!</span> '
                 dodged = False
             else:
                 if attack_type == 'physical':
-                    turn += system.enemy.name + ' strikes the opponent dealing <span class="physical-damage">' + str(
-                        damage) + ' damage!</span>'
+                    turn += system.enemy.name + ' strikes with ' + attack_name + ' dealing ' \
+                                                '<span class="physical-damage">' + str(damage) + ' damage!</span>'
                 else:
-                    turn += system.enemy.name + ' slings a spell at the opponent dealing <span class="magical-damage">' + str(
+                    turn += system.enemy.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
                         damage) + ' damage!</span>'
 
                 if critical:

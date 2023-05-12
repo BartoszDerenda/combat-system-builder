@@ -102,7 +102,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="strength_price">Arbitrary value of each point of strength: </label>
+                        <label for="strength_price">Combat value of each point of strength: </label>
                         <input type="number" id="strength_price" name="strength_price" step="any" value="{{ system.strength_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -134,7 +134,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="intelligence_price">Arbitrary value of each point of intelligence: </label>
+                        <label for="intelligence_price">Combat value of each point of intelligence: </label>
                         <input type="number" id="intelligence_price" name="intelligence_price" step="any" value="{{ system.intelligence_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -240,7 +240,7 @@
                 <tr>
                     <td>
                         <label for="agility_x">Where X equals to opponent's </label>
-                        <select type="number" id="agility_x" name="agility_x">
+                        <select type="number" id="agility_x" name="agility_x" form="ruleset-box">
                             <option value="level" {% if system.agility_x == "level" %} selected {% endif %} >Level</option>
                             <option value="strength" {% if system.agility_x == "strength" %} selected {% endif %} >Strength</option>
                             <option value="intelligence" {% if system.agility_x == "intelligence" %} selected {% endif %} >Intelligence</option>
@@ -271,7 +271,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="agility_price">Arbitrary value of each point of agility: </label>
+                        <label for="agility_price">Combat value of each point of agility: </label>
                         <input type="number" id="agility_price" name="agility_price" step="any" value="{{ system.agility_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -291,22 +291,22 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="willpower_type_1" name="willpower_type" value="magical"
-                        {% if system.willpower_type == "magical" %}
-                                checked
-                        {% endif %}
-                        />
-                        <label for="willpower_type_1">Magical attacks</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="radio" id="willpower_type_2" name="willpower_type" value="physical"
+                        <input type="radio" id="willpower_type_1" name="willpower_type" value="physical"
                         {% if system.willpower_type == "physical" %}
                                 checked
                         {% endif %}
                         />
-                        <label for="willpower_type_2">Physical attacks</label>
+                        <label for="willpower_type_1">Physical attacks</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="willpower_type_2" name="willpower_type" value="magical"
+                        {% if system.willpower_type == "magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="willpower_type_2">Magical attacks</label>
                     </td>
                 </tr>
                 <tr>
@@ -377,7 +377,7 @@
                 <tr>
                     <td>
                         <label for="willpower_x">Where X equals to opponent's </label>
-                        <select type="number" id="willpower_x" name="willpower_x">
+                        <select type="number" id="willpower_x" name="willpower_x" form="ruleset-box">
                             <option value="level" {% if system.willpower_x == "level" %} selected {% endif %} >Level</option>
                             <option value="strength" {% if system.willpower_x == "strength" %} selected {% endif %} >Strength</option>
                             <option value="intelligence" {% if system.willpower_x == "intelligence" %} selected {% endif %} >Intelligence</option>
@@ -408,7 +408,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="willpower_price">Arbitrary value of each point of willpower: </label>
+                        <label for="willpower_price">Combat value of each point of willpower: </label>
                         <input type="number" id="willpower_price" name="willpower_price" step="any" value="{{ system.willpower_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -438,7 +438,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="endurance_price">Arbitrary value of each point of endurance: </label>
+                        <label for="endurance_price">Combat value of each point of endurance: </label>
                         <input type="number" id="endurance_price" name="endurance_price" step="any" value="{{ system.endurance_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -511,7 +511,7 @@
                 <tr>
                     <td>
                         <label for="charisma_x">Where X equals to opponent's </label>
-                        <select type="number" id="charisma_x" name="charisma_x">
+                        <select type="number" id="charisma_x" name="charisma_x" form="ruleset-box">
                             <option value="level" {% if system.charisma_x == "level" %} selected {% endif %} >Level</option>
                             <option value="strength" {% if system.charisma_x == "strength" %} selected {% endif %} >Strength</option>
                             <option value="intelligence" {% if system.charisma_x == "intelligence" %} selected {% endif %} >Intelligence</option>
@@ -554,7 +554,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="charisma_price">Arbitrary value of each point of charisma: </label>
+                        <label for="charisma_price">Combat value of each point of charisma: </label>
                         <input type="number" id="charisma_price" name="charisma_price" step="any" value="{{ system.charisma_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -565,7 +565,7 @@
                 <tr>
                     <td>
                         Luck increases a chance that an attack becomes a critical attack.
-                        Critical attacks damage is multiplied by a given amount.
+                        Critical attack's damage is multiplied by a given amount.
                     </td>
                 </tr>
                 <tr>
@@ -640,7 +640,7 @@
                 <tr>
                     <td>
                         <label for="luck_x">Where X equals to opponent's </label>
-                        <select type="number" id="luck_x" name="luck_x">
+                        <select type="number" id="luck_x" name="luck_x" form="ruleset-box">
                             <option value="level" {% if system.luck_x == "level" %} selected {% endif %} >Level</option>
                             <option value="strength" {% if system.luck_x == "strength" %} selected {% endif %} >Strength</option>
                             <option value="intelligence" {% if system.luck_x == "intelligence" %} selected {% endif %} >Intelligence</option>
@@ -671,7 +671,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="luck_price">Arbitrary value of each point of luck: </label>
+                        <label for="luck_price">Combat value of each point of luck: </label>
                         <input type="number" id="luck_price" name="luck_price" step="any" value="{{ system.luck_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -702,7 +702,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="speed_price">Arbitrary value of each point of speed: </label>
+                        <label for="speed_price">Combat value of each point of speed: </label>
                         <input type="number" id="speed_price" name="speed_price" step="any" value="{{ system.speed_price }}"
                                onblur="checkInt(this)" required />
                     </td>
@@ -722,32 +722,32 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_type_1" name="armor_type" value="physical and magical"
-                        {% if system.armor_type == "physical and magical" %}
-                                checked
-                        {% endif %}
-                        />
-                        <label for="armor_type_1">Physical and magical attacks</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="radio" id="armor_type_2" name="armor_type" value="physical"
+                        <input type="radio" id="armor_type_1" name="armor_type" value="physical"
                         {% if system.armor_type == "physical" %}
                                 checked
                         {% endif %}
                         />
-                        <label for="armor_type_2">Physical attacks</label>
+                        <label for="armor_type_1">Physical attacks</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="radio" id="armor_type_3" name="armor_type" value="magical"
+                        <input type="radio" id="armor_type_2" name="armor_type" value="magical"
                         {% if system.armor_type == "magical" %}
                                 checked
                         {% endif %}
                         />
-                        <label for="armor_type_3">Magical attacks</label>
+                        <label for="armor_type_2">Magical attacks</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" id="armor_type_3" name="armor_type" value="physical and magical"
+                        {% if system.armor_type == "physical and magical" %}
+                                checked
+                        {% endif %}
+                        />
+                        <label for="armor_type_3">Physical and magical attacks</label>
                     </td>
                 </tr>
                 <tr>
@@ -817,7 +817,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="armor_price">Arbitrary value of each point of armor: </label>
+                        <label for="armor_price">Combat value of each point of armor: </label>
                         <input type="number" id="armor_price" name="armor_price" step="any" value="{{ system.armor_price }}"
                                onblur="checkInt(this)" required />
                     </td>
