@@ -21,15 +21,15 @@ class Fighter:
 
         # Attributes
         self.level = 1
-        self.strength = 1
-        self.intelligence = 1
-        self.agility = 1
-        self.willpower = 1
-        self.endurance = 1
-        self.charisma = 1
-        self.luck = 1
-        self.speed = 1
-        self.armor = 1
+        self.strength = 10
+        self.intelligence = 10
+        self.agility = 10
+        self.willpower = 10
+        self.endurance = 10
+        self.charisma = 10
+        self.luck = 10
+        self.speed = 10
+        self.armor = 10
         self.likelihood_of_physical = 50
         self.likelihood_of_magical = 50
         self.total_value = 0
@@ -630,21 +630,6 @@ def set_ruleset():
     else:
         system.strength_dmg = 3
 
-    if request.form.get("strength_min") != '' and float(request.form.get("strength_min")) >= 0.1:
-        system.strength_min = float(request.form.get("strength_min"))
-    else:
-        system.strength_min = 0.9
-
-    if request.form.get("strength_max") != '' and float(request.form.get("strength_max")) >= 0.1:
-        system.strength_max = float(request.form.get("strength_max"))
-    else:
-        system.strength_max = 1.1
-
-    if system.strength_min > system.strength_max:
-        temp = system.strength_min
-        system.strength_min = system.strength_max
-        system.strength_max = temp
-
     if request.form.get("strength_crit") != '' and float(request.form.get("strength_crit")) >= 0.1:
         system.strength_crit = float(request.form.get("strength_crit"))
     else:
@@ -662,21 +647,6 @@ def set_ruleset():
         system.intelligence_dmg = int(request.form.get("intelligence_dmg"))
     else:
         system.intelligence_dmg = 3
-
-    if request.form.get("intelligence_min") != '' and float(request.form.get("intelligence_min")) >= 0.1:
-        system.intelligence_min = float(request.form.get("intelligence_min"))
-    else:
-        system.intelligence_min = 0.9
-
-    if request.form.get("intelligence_max") != '' and float(request.form.get("intelligence_max")) >= 0.1:
-        system.intelligence_max = float(request.form.get("intelligence_max"))
-    else:
-        system.intelligence_max = 1.1
-
-    if system.intelligence_min > system.intelligence_max:
-        temp = system.intelligence_min
-        system.intelligence_min = system.intelligence_max
-        system.intelligence_max = temp
 
     if request.form.get("intelligence_crit") != '' and float(request.form.get("intelligence_crit")) >= 0.1:
         system.intelligence_crit = float(request.form.get("intelligence_crit"))
@@ -916,6 +886,7 @@ def simulation():
     system = sessions[session['key']]
     win_condition = False
     combatlog = []
+    turn_number = 0
 
     hero_health = (system.hero.endurance * system.endurance_value) + system.base_health
     enemy_health = (system.enemy.endurance * system.endurance_value) + system.base_health
@@ -1105,8 +1076,10 @@ def simulation():
 
     while not win_condition:
         turn = ""
+        amount_absorbed = 0
         if hero_speed_base >= enemy_speed_base:
 
+            turn_number += 1
             damage, attack_type, attack_name = attack_choice("hero", damage, attack_name)
 
             if hero_charisma_buff:
@@ -1124,7 +1097,7 @@ def simulation():
             damage = round(damage)
             enemy_health -= damage
 
-            turn += '<div class="hero-turn">'
+            turn += '<div class="hero-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="hero-damage">'
             if dodged:
                 turn += system.hero.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
                                                                     'class="agility-dodge">dodge the attack!</span> '
@@ -1132,10 +1105,10 @@ def simulation():
             else:
                 if attack_type == 'physical':
                     turn += system.hero.name + ' strikes with ' + attack_name + ' dealing ' \
-                                                '<span class="physical-damage">' + str(damage) + ' damage!</span>'
+                                                '<span class="physical-damage">' + str(damage + amount_absorbed) + ' damage!</span>'
                 else:
                     turn += system.hero.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
-                        damage) + ' damage!</span>'
+                        damage + amount_absorbed) + ' damage!</span>'
 
                 if critical:
                     turn += '<span class="critical-effect"> Critical strike!</span>'
@@ -1156,15 +1129,18 @@ def simulation():
                 else:
                     enemy_debuff = random.randint(system.charisma_min, system.charisma_max)
                     turn += '<br><i class="charisma-effect">' + system.hero.name + " let's out an intimidating roar, decreasing the power of " \
-                                                                                   "opponent's next attack " + str(
+                                                                                   "opponent's next attack by " + str(
                         enemy_debuff) + '%!</i>'
                     enemy_charisma_debuff = True
 
-            turn += '</div><br>'
+            turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health) + "<br>" + \
+                    system.enemy.name + "'s health: " + str(enemy_health + damage) + " (-" + str(damage) + ")" + \
+                    '</span></div><br>'
             enemy_speed_base += system.enemy.speed
 
         else:
 
+            turn_number += 1
             damage, attack_type, attack_name = attack_choice("enemy", damage, attack_name)
 
             if enemy_charisma_buff:
@@ -1182,7 +1158,7 @@ def simulation():
             damage = round(damage)
             hero_health -= damage
 
-            turn += '<div class="enemy-turn">'
+            turn += '<div class="enemy-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="enemy-damage">'
             if dodged:
                 turn += system.enemy.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
                                                                     'class="agility-dodge">dodge the attack!</span> '
@@ -1190,10 +1166,10 @@ def simulation():
             else:
                 if attack_type == 'physical':
                     turn += system.enemy.name + ' strikes with ' + attack_name + ' dealing ' \
-                                                '<span class="physical-damage">' + str(damage) + ' damage!</span>'
+                                                '<span class="physical-damage">' + str(damage + amount_absorbed) + ' damage!</span>'
                 else:
                     turn += system.enemy.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
-                        damage) + ' damage!</span>'
+                        damage + amount_absorbed) + ' damage!</span>'
 
                 if critical:
                     turn += '<span class="critical-effect"> Critical strike!</span>'
@@ -1214,11 +1190,13 @@ def simulation():
                 else:
                     hero_debuff = random.randint(system.charisma_min, system.charisma_max)
                     turn += '<br><i class="charisma-effect">' + system.enemy.name + " let's out an intimidating roar, decreasing the power of " \
-                                                                                    "opponent's next attack " + str(
+                                                                                    "opponent's next attack by " + str(
                         hero_debuff) + '%!</i>'
                     hero_charisma_debuff = True
 
-            turn += '</div><br>'
+            turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health + damage) + " (-" + str(damage) + ")<br>" + \
+                    system.enemy.name + "'s health: " + str(enemy_health) + \
+                    '</span></div><br>'
             hero_speed_base += system.hero.speed
 
         if hero_health <= 0:

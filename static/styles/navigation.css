@@ -14,14 +14,6 @@
     margin-bottom: 4.5%;
 }
 
-.nav-dot {
-    text-align: center;
-    width: 2vh;
-
-    cursor: default;
-    user-select: none;
-}
-
 .current-page {
     font-size: 1.1em;
     font-weight: bold;

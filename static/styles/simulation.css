@@ -30,9 +30,20 @@
     padding: 2%;
 }
 
+.hero-damage {
+    background-color: rgb(56, 68, 119);
+    padding: 2%;
+    width: 100%;
+}
+
 .enemy-turn {
     background-color: rgb(103, 59, 59);
-    min-width: 70%;
+    min-width: 70vw;
+    padding: 2%;
+}
+
+.enemy-damage {
+    background-color: rgb(93, 42, 42);
     padding: 2%;
 }
 
@@ -70,4 +81,10 @@
 
 .charisma-effect {
     color: #ff9900;
+}
+
+@media (max-width: 900px) {
+    .hero-turn, .enemy-turn {
+        min-width: 90vw;
+    }
 }
