@@ -14,8 +14,15 @@
 </head>
 <body>
     <header>
-        <a href="https://github.com/BartoszDerenda/combat-system-builder">Save system</a>
-        <a href="https://github.com/BartoszDerenda/combat-system-builder">Browse</a>
+        {% if session['loggedin'] == False %}
+            <a href="{{ url_for('registration') }}" class="nav-text">Register</a>
+            <a href="{{ url_for('login') }}" class="nav-text">Login</a>
+        {% else %}
+            <p class="nav-text">{{ session['username'] }}</p>
+            <a href="{{ url_for('share') }}" class="nav-text">Share</a>
+            <a href="{{ url_for('browse') }}" class="nav-text">Browse</a>
+            <a href="{{ url_for('logout') }}" class="nav-text">Logout</a>
+        {% endif %}
     </header>
     {% block body %}
 

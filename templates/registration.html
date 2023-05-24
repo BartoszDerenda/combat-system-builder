@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navigation.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/homepage.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/authentication.css') }}" type="text/css" />
+{% endblock %}
+
+{% block body %}
+
+    <script>
+        var checkPassword = function() {
+          if (document.getElementById('password').value === document.getElementById('password_confirm').value &&
+              document.getElementById('password').value !== '' &&
+              document.getElementById('password_confirm').value !== '') {
+            document.getElementById('password_check').style.color = '#7AEC6AFF';
+            document.getElementById('password_check').innerHTML = 'Passwords are matching.';
+          } else {
+            document.getElementById('password_check').style.color = '#CE5656FF';
+            document.getElementById('password_check').innerHTML = 'Passwords are not matching!';
+          }
+        }
+    </script>
+
+    <div id="navigation">
+        <div class="nav-box">
+            <a href="{{ url_for('ruleset') }}" class="nav-text">Ruleset</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('stat_sheet') }}" class="nav-text">Stat sheet</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('simulation') }}" class="nav-text">Simulation</a>
+        </div>
+    </div>
+    <div id="main-box">
+        <div id="main-text">
+            <h1>Registration</h1>
+            <form id="authentication_box" action="{{ url_for('registration') }}" method="POST">
+                {% if message is defined and message %}
+                    {{ message|safe }}
+                {% endif %}
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" autocomplete="off" /><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" autocomplete="off" onkeyup="checkPassword()" /><br>
+                <label for="password_confirm">Confirm password:</label>
+                <input type="password" id="password_confirm" name="password_confirm" onkeyup="checkPassword()" />
+                <br><span id="password_check"></span>
+                <div class="confirm-btn">
+                    <input type="submit" name="registration_submit" id="submit" value="Register">
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

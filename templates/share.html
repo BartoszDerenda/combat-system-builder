@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navigation.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/homepage.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/authentication.css') }}" type="text/css" />
+{% endblock %}
+
+{% block body %}
+
+    <div id="navigation">
+        <div class="nav-box">
+            <a href="{{ url_for('ruleset') }}" class="nav-text">Ruleset</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('stat_sheet') }}" class="nav-text">Stat sheet</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('simulation') }}" class="nav-text">Simulation</a>
+        </div>
+    </div>
+    <div id="main-box">
+        <div id="main-text">
+            <h1>Share</h1>
+            <form id="authentication_box" action="{{ url_for('share') }}" method="POST">
+                {% if message is defined and message %}
+                    {{ message|safe }}
+                {% endif %}
+                <p>Here you can publish your combat system for others to enjoy!</p>
+                <p>You will be able to find it on the list in Browse section.</p>
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" max="128" placeholder="Max 128 characters." required />
+                <label for="comment">Comment:</label>
+                <textarea id="comment" name="comment" maxlength="2048" rows="30" cols="50"
+                          placeholder="Max 2048 characters." required></textarea>
+                <div class="confirm-btn">
+                    <input type="submit" name="share_submit" id="submit" value="Share">
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+#main-text {
+    width: 25%;
+}
+
+#authentication_box {
+    display: flex;
+    text-align: left;
+    flex-flow: column;
+}
+
+.authentication-message {
+    color: black;
+    padding: 10px;
+}
+
+.error-color {
+    background-color: #ef8652;
+}
+
+.success-color {
+    background-color: #86cc4b;
+}
+
+input {
+    margin-bottom: 15px;
+
+    color: black;
+}
+
+textarea {
+    background-color: #474d75;
+}
+
+.confirm-btn {
+    margin-top: 10%;
+}
+
+#submit {
+    background-color: #474d75;
+    color: white;
+
+    width: 200px;
+    height: 50px;
+}
+
+#submit:hover {
+    transition: 0.2s;
+    background-color: #6872af;
+}
+
+@media (max-width: 1000px) {
+    #main-text {
+        width: 35%;
+    }
+}
+
+@media (max-width: 700px) {
+    #main-text {
+        width: 45%;
+    }
+
+    #submit {
+        width: 50%;
+        height: 20%;
+    }
+}

@@ -5,7 +5,7 @@
       <paths name="20_derenda@limba.wzks.uj.edu.pl:4016 password">
         <serverdata>
           <mappings>
-            <mapping deploy="" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

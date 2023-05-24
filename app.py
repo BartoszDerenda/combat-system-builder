@@ -2,13 +2,23 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import session
+from flask import redirect
+from flask import url_for
+from flask_mysqldb import MySQL
+
 import math
 import random
 import uuid
 
 app = Flask(__name__)
-app.secret_key = '8008135'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = '20_derenda'
+app.config['MYSQL_PASSWORD'] = 'limba9955'
+app.config['MYSQL_DB'] = '20_derenda'
 
+mysql = MySQL(app)
+
+app.secret_key = '8008135'
 sessions = {}
 
 
@@ -32,7 +42,6 @@ class Fighter:
         self.armor = 10
         self.likelihood_of_physical = 50
         self.likelihood_of_magical = 50
-        self.total_value = 0
 
         # Skills and Spells
         self.attack_1_type = "physical"
@@ -68,6 +77,7 @@ class Fighter:
         self.charisma_chance = 0
         self.critical_chance = 0
         self.armor_mitigation = 0
+        self.total_value = 0
 
 
 class System:
@@ -76,14 +86,10 @@ class System:
         self.enemy = Fighter('Enemy')
 
         self.strength_dmg = 3
-        self.strength_min = 0.9
-        self.strength_max = 1.1
         self.strength_crit = 1.5
         self.strength_price = 2
 
         self.intelligence_dmg = 4
-        self.intelligence_min = 0.8
-        self.intelligence_max = 1.2
         self.intelligence_crit = 1.5
         self.intelligence_price = 2
 
@@ -852,11 +858,197 @@ def set_ruleset():
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
+    session['loggedin'] = False
     if 'key' not in session:
         session['key'] = uuid.uuid4()
     sessions[session['key']] = System()
 
     return render_template('index.html')
+
+
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    system = sessions[session['key']]
+    message = ''
+
+    if request.method == 'POST':
+        if request.form.get('registration_submit', False) == 'Register':
+            username = request.form['username']
+            password = request.form['password']
+            password_confirm = request.form['password_confirm']
+
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT * FROM users WHERE username = %s', [username])
+            account = cursor.fetchone()
+            if username == '' or password == '' or password_confirm == '':
+                message = '<div class="authentication-message error-color">Please fill out the form!</div>'
+            elif password != password_confirm:
+                message = '<div class="authentication-message error-color">Passwords do not match!</div>'
+            elif account:
+                message = '<div class="authentication-message error-color">Username is already taken!</div>'
+            elif len(username) > 64:
+                message = '<div class="authentication-message error-color">Username is too long! (Max 64 characters)</div>'
+            elif len(password) > 64:
+                message = '<div class="authentication-message error-color">Password is too long! (Max 64 characters)</div>'
+            else:
+                cursor.execute('INSERT INTO users VALUES (NULL, %s, %s, "USER")', ([username], [password]))
+                cursor.execute('UPDATE users SET password = MD5(password) WHERE username = %s', [username])
+                message = '<div class="authentication-message success-color">You have successfully registered!</div>'
+                mysql.connection.commit()
+
+            cursor.close()
+
+    return render_template('registration.html', system=system, message=message)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    system = sessions[session['key']]
+    message = ''
+
+    if request.method == 'POST':
+        if request.form.get('login_submit', False) == 'Login':
+            username = request.form['username']
+            password = request.form['password']
+
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT * FROM users WHERE username = %s and password = md5(%s)', ([username], [password]))
+            account = cursor.fetchone()
+            if account:
+                session['loggedin'] = True
+                session['username'] = account[1]
+                session['user_type'] = account[3]
+                cursor.close()
+                return redirect(url_for('ruleset'))
+            else:
+                message = '<div class="authentication-message error-color">Incorrect username or password!</div>'
+
+            cursor.close()
+
+    return render_template('login.html', system=system, message=message)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    system = sessions[session['key']]
+    if not session['loggedin']:
+        return redirect(url_for('homepage'))
+
+    session['loggedin'] = False
+    session['username'] = ''
+
+    return render_template('login.html', system=system)
+
+
+@app.route('/share', methods=['GET', 'POST'])
+def share():
+    system = sessions[session['key']]
+    if not session['loggedin']:
+        return redirect(url_for('homepage'))
+
+    if request.method == 'POST':
+        if request.form.get('share_submit', False) == 'Share':
+            cursor = mysql.connection.cursor()
+            comment = request.form['comment']
+            title = request.form['title']
+
+            # I think this could've been done better by concatenating some sort of list of class attributes.
+            # I don't have time to optimize it right now.
+
+            cursor.execute('INSERT INTO combat_systems VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
+                           '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
+                           '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
+                           '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
+                           '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
+                           '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
+                           '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                           ([session['username']], [title], [comment],
+                            [system.strength_dmg], [system.strength_crit], [system.strength_price],
+
+                            [system.intelligence_dmg], [system.intelligence_crit], [system.intelligence_price],
+
+                            [system.agility_type], [system.agility_math], [system.agility_x],
+                            [system.agility_y], [system.agility_cap], [system.agility_price],
+
+                            [system.willpower_type], [system.willpower_math], [system.willpower_x],
+                            [system.willpower_y], [system.willpower_cap], [system.willpower_price],
+
+                            [system.base_health], [system.endurance_value], [system.endurance_price],
+
+                            [system.charisma_math], [system.charisma_x], [system.charisma_y], [system.charisma_min],
+                            [system.charisma_max], [system.charisma_cap], [system.charisma_price],
+
+                            [system.luck_math], [system.luck_x], [system.luck_y], [system.luck_cap],
+                            [system.luck_price],
+
+                            [system.speed_price],
+
+                            [system.armor_type], [system.armor_math], [system.armor_y], [system.armor_cap],
+                            [system.armor_price],
+
+                            [system.hero.name], [system.hero.level], [system.hero.strength], [system.hero.intelligence],
+                            [system.hero.agility], [system.hero.willpower], [system.hero.endurance],
+                            [system.hero.charisma], [system.hero.luck], [system.hero.speed], [system.hero.armor],
+
+                            [system.hero.likelihood_of_physical], [system.hero.likelihood_of_magical],
+
+                            [system.hero.attack_1_type], [system.hero.attack_1_name], [system.hero.attack_1_min],
+                            [system.hero.attack_1_max], [system.hero.attack_1_chance],
+
+                            [system.hero.attack_2_type], [system.hero.attack_2_name], [system.hero.attack_2_min],
+                            [system.hero.attack_2_max], [system.hero.attack_2_chance],
+
+                            [system.hero.attack_3_type], [system.hero.attack_3_name], [system.hero.attack_3_min],
+                            [system.hero.attack_3_max], [system.hero.attack_3_chance],
+
+                            [system.hero.attack_4_type], [system.hero.attack_4_name], [system.hero.attack_4_min],
+                            [system.hero.attack_4_max], [system.hero.attack_4_chance],
+
+                            [system.enemy.name], [system.enemy.level], [system.enemy.strength],
+                            [system.enemy.intelligence], [system.enemy.agility], [system.enemy.willpower],
+                            [system.enemy.endurance], [system.enemy.charisma], [system.enemy.luck],
+                            [system.enemy.speed], [system.enemy.armor],
+
+                            [system.enemy.likelihood_of_physical], [system.enemy.likelihood_of_magical],
+
+                            [system.enemy.attack_1_type], [system.enemy.attack_1_name], [system.enemy.attack_1_min],
+                            [system.enemy.attack_1_max], [system.enemy.attack_1_chance],
+
+                            [system.enemy.attack_2_type], [system.enemy.attack_2_name], [system.enemy.attack_2_min],
+                            [system.enemy.attack_2_max], [system.enemy.attack_2_chance],
+
+                            [system.enemy.attack_3_type], [system.enemy.attack_3_name], [system.enemy.attack_3_min],
+                            [system.enemy.attack_3_max], [system.enemy.attack_3_chance],
+
+                            [system.enemy.attack_4_type], [system.enemy.attack_4_name], [system.enemy.attack_4_min],
+                            [system.enemy.attack_4_max], [system.enemy.attack_4_chance],
+                            ))
+
+            mysql.connection.commit()
+            cursor.close()
+
+    return render_template('share.html', system=system)
+
+
+@app.route('/browse', methods=['GET', 'POST'])
+def browse():
+    system = sessions[session['key']]
+    if not session['loggedin']:
+        return redirect(url_for('homepage'))
+
+    if request.method == 'POST':
+        if request.form.get('delete', False) == 'Delete':
+            cursor = mysql.connection.cursor()
+            cursor.execute('DELETE FROM combat_systems WHERE `id` = %s', [request.form['systemId']])
+            mysql.connection.commit()
+            cursor.close()
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT `id`, `username`, `title`, `comment` FROM combat_systems')
+    database = cursor.fetchall()
+    cursor.close()
+
+    return render_template('browse.html', system=system, database=database, user_type=session['user_type'])
 
 
 @app.route('/ruleset', methods=['GET', 'POST'])
@@ -866,6 +1058,138 @@ def ruleset():
     if request.method == 'POST':
         if request.form.get('ruleset_update', False) == 'Confirm':
             set_ruleset()
+        elif request.form.get('confirm', False) == 'Use this':
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT * FROM combat_systems WHERE `id` = %s', [request.form['systemId']])
+            data = cursor.fetchone()
+
+            system.strength_dmg = data[4]
+            system.strength_crit = data[5]
+            system.strength_price = data[6]
+
+            system.intelligence_dmg = data[7]
+            system.intelligence_crit = data[8]
+            system.intelligence_price = data[9]
+
+            system.agility_type = data[10]
+            system.agility_math = data[11]
+            system.agility_x = data[12]
+            system.agility_y = data[13]
+            system.agility_cap = data[14]
+            system.agility_price = data[15]
+
+            system.willpower_type = data[16]
+            system.willpower_math = data[17]
+            system.willpower_x = data[18]
+            system.willpower_y = data[19]
+            system.willpower_cap = data[20]
+            system.willpower_price = data[21]
+
+            system.base_health = data[22]
+            system.endurance_value = data[23]
+            system.endurance_price = data[24]
+
+            system.charisma_math = data[25]
+            system.charisma_x = data[26]
+            system.charisma_y = data[27]
+            system.charisma_min = data[28]
+            system.charisma_max = data[29]
+            system.charisma_cap = data[30]
+            system.charisma_price = data[31]
+
+            system.luck_math = data[32]
+            system.luck_x = data[33]
+            system.luck_y = data[34]
+            system.luck_cap = data[35]
+            system.luck_price = data[36]
+
+            system.speed_price = data[37]
+
+            system.armor_type = data[38]
+            system.armor_math = data[39]
+            system.armor_y = data[40]
+            system.armor_cap = data[41]
+            system.armor_price = data[42]
+
+            system.hero.name = data[43]
+            system.hero.level = data[44]
+            system.hero.strength = data[45]
+            system.hero.intelligence = data[46]
+            system.hero.agility = data[47]
+            system.hero.willpower = data[48]
+            system.hero.endurance = data[49]
+            system.hero.charisma = data[50]
+            system.hero.luck = data[51]
+            system.hero.speed = data[52]
+            system.hero.armor = data[53]
+
+            system.hero.likelihood_of_physical = data[54]
+            system.hero.likelihood_of_magical = data[55]
+
+            system.hero.attack_1_type = data[56]
+            system.hero.attack_1_name = data[57]
+            system.hero.attack_1_min = data[58]
+            system.hero.attack_1_max = data[59]
+            system.hero.attack_1_chance = data[60]
+
+            system.hero.attack_2_type = data[61]
+            system.hero.attack_2_name = data[62]
+            system.hero.attack_2_min = data[63]
+            system.hero.attack_2_max = data[64]
+            system.hero.attack_2_chance = data[65]
+
+            system.hero.attack_3_type = data[66]
+            system.hero.attack_3_name = data[67]
+            system.hero.attack_3_min = data[68]
+            system.hero.attack_3_max = data[69]
+            system.hero.attack_3_chance = data[70]
+
+            system.hero.attack_4_type = data[71]
+            system.hero.attack_4_name = data[72]
+            system.hero.attack_4_min = data[73]
+            system.hero.attack_4_max = data[74]
+            system.hero.attack_4_chance = data[75]
+
+            system.enemy.name = data[76]
+            system.enemy.level = data[77]
+            system.enemy.strength = data[78]
+            system.enemy.intelligence = data[79]
+            system.enemy.agility = data[80]
+            system.enemy.willpower = data[81]
+            system.enemy.endurance = data[82]
+            system.enemy.charisma = data[83]
+            system.enemy.luck = data[84]
+            system.enemy.speed = data[85]
+            system.enemy.armor = data[86]
+
+            system.enemy.likelihood_of_physical = data[87]
+            system.enemy.likelihood_of_magical = data[88]
+
+            system.enemy.attack_1_type = data[89]
+            system.enemy.attack_1_name = data[90]
+            system.enemy.attack_1_min = data[91]
+            system.enemy.attack_1_max = data[92]
+            system.enemy.attack_1_chance = data[93]
+
+            system.enemy.attack_2_type = data[94]
+            system.enemy.attack_2_name = data[95]
+            system.enemy.attack_2_min = data[96]
+            system.enemy.attack_2_max = data[97]
+            system.enemy.attack_2_chance = data[98]
+
+            system.enemy.attack_3_type = data[99]
+            system.enemy.attack_3_name = data[100]
+            system.enemy.attack_3_min = data[101]
+            system.enemy.attack_3_max = data[102]
+            system.enemy.attack_3_chance = data[103]
+
+            system.enemy.attack_4_type = data[104]
+            system.enemy.attack_4_name = data[105]
+            system.enemy.attack_4_min = data[106]
+            system.enemy.attack_4_max = data[107]
+            system.enemy.attack_4_chance = data[108]
+
+            cursor.close()
 
     return render_template('ruleset.html', system=system)
 
@@ -1100,12 +1424,13 @@ def simulation():
             turn += '<div class="hero-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="hero-damage">'
             if dodged:
                 turn += system.hero.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
-                                                                    'class="agility-dodge">dodge the attack!</span> '
+                                                                            'class="agility-dodge">dodge the attack!</span> '
                 dodged = False
             else:
                 if attack_type == 'physical':
                     turn += system.hero.name + ' strikes with ' + attack_name + ' dealing ' \
-                                                '<span class="physical-damage">' + str(damage + amount_absorbed) + ' damage!</span>'
+                                                                                '<span class="physical-damage">' + str(
+                        damage + amount_absorbed) + ' damage!</span>'
                 else:
                     turn += system.hero.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
                         damage + amount_absorbed) + ' damage!</span>'
@@ -1161,12 +1486,13 @@ def simulation():
             turn += '<div class="enemy-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="enemy-damage">'
             if dodged:
                 turn += system.enemy.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
-                                                                    'class="agility-dodge">dodge the attack!</span> '
+                                                                             'class="agility-dodge">dodge the attack!</span> '
                 dodged = False
             else:
                 if attack_type == 'physical':
                     turn += system.enemy.name + ' strikes with ' + attack_name + ' dealing ' \
-                                                '<span class="physical-damage">' + str(damage + amount_absorbed) + ' damage!</span>'
+                                                                                 '<span class="physical-damage">' + str(
+                        damage + amount_absorbed) + ' damage!</span>'
                 else:
                     turn += system.enemy.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
                         damage + amount_absorbed) + ' damage!</span>'
@@ -1194,9 +1520,8 @@ def simulation():
                         hero_debuff) + '%!</i>'
                     hero_charisma_debuff = True
 
-            turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health + damage) + " (-" + str(damage) + ")<br>" + \
-                    system.enemy.name + "'s health: " + str(enemy_health) + \
-                    '</span></div><br>'
+            turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health + damage) + " (-" + str(
+                damage) + ")<br>" + system.enemy.name + "'s health: " + str(enemy_health) + '</span></div><br>'
             hero_speed_base += system.hero.speed
 
         if hero_health <= 0:

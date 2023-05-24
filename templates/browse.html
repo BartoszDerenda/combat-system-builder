@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/navigation.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/homepage.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/browse.css') }}" type="text/css" />
+{% endblock %}
+
+{% block body %}
+
+    <div id="navigation">
+        <div class="nav-box">
+            <a href="{{ url_for('ruleset') }}" class="nav-text">Ruleset</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('stat_sheet') }}" class="nav-text">Stat sheet</a>
+        </div>
+        <div class="nav-box">
+            <a href="{{ url_for('simulation') }}" class="nav-text">Simulation</a>
+        </div>
+    </div>
+    <div id="main-box">
+        <h1>Browse</h1>
+        {% for combat_system in database %}
+            <div class="combat-system-box">
+                {% if user_type == 'ADMIN' %}
+                    <form action="{{ url_for('browse') }}" method="POST">
+                        <input type="hidden" id="systemId" name="systemId" value="{{ combat_system[0] }}" />
+                        <input type="submit" id="delete" name="delete" value="Delete">
+                    </form>
+                {% endif %}
+                <h2>{{ combat_system[1] }}</h2><br>
+                <h1>{{ combat_system[2] }}</h1><br>
+                <div class="description">{{ combat_system[3] }}
+                </div>
+                <form action="{{ url_for('ruleset') }}" method="POST">
+                    <input type="hidden" id="systemId" name="systemId" value="{{ combat_system[0] }}" />
+                    <div class="confirm-btn">
+                        <input type="submit" id="confirm" name="confirm" value="Use this">
+                    </div>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

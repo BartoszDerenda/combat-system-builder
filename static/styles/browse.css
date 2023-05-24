@@ -1,0 +1,56 @@
+#main-box {
+    justify-content: start; !important;
+    align-items: start; !important;
+
+    padding-left: 25px;
+}
+
+.combat-system-box {
+    min-width: 90vw;
+    height: 100%;
+    background-color: #33385b;
+    margin-bottom: 25px;
+    padding: 25px;
+}
+
+.confirm-btn {
+    padding-top: 25px;
+}
+
+input[type=submit] {
+    width: 100px;
+    height: 50px;
+    border-radius: 17px;
+    background-color: #4c5a9b;
+}
+
+input[type=submit]:hover {
+    transition: 0.2s;
+    background-color: #6872af;
+}
+
+#delete {
+    background-color: #663b3c;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.3em;
+}
+
+.description {
+    padding: 20px;
+    background-color: #4e568c;
+    font-size: 1.15em;
+
+    white-space: pre-wrap;
+}
+
+@media (max-width: 900px) {
+    #main-box {
+        padding-left: 10px;
+    }
+}

@@ -1,24 +1,3 @@
-#homepage-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-    min-width: 100%;
-    min-height: 60vh;
-
-    background-color: #474d75;
-}
-
-#homepage-text {
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    flex-direction: column;
-
-    width: 50%;
-}
-
 h1 {
     font-size: 1.7em;
 }
