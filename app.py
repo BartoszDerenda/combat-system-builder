@@ -9,12 +9,14 @@ from flask_mysqldb import MySQL
 import math
 import random
 import uuid
+import database_credentials
 
 app = Flask(__name__)
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = '20_derenda'
-app.config['MYSQL_PASSWORD'] = 'limba9955'
-app.config['MYSQL_DB'] = '20_derenda'
+database_key = database_credentials.Key()
+app.config['MYSQL_HOST'] = database_key.host
+app.config['MYSQL_USER'] = database_key.user
+app.config['MYSQL_PASSWORD'] = database_key.password
+app.config['MYSQL_DB'] = database_key.database
 
 mysql = MySQL(app)
 
@@ -69,8 +71,8 @@ class Fighter:
         self.attack_4_chance = 50
 
         # Summary
-        self.physical_damage = 0
-        self.magical_damage = 0
+        self.physical_damage = 1
+        self.magical_damage = 1
         self.dodge_chance = 0
         self.resistance = 0
         self.hitpoints = 0
@@ -84,6 +86,8 @@ class System:
     def __init__(self):
         self.hero = Fighter('Hero')
         self.enemy = Fighter('Enemy')
+        self.hero_wins = 0
+        self.enemy_wins = 0
 
         self.strength_dmg = 3
         self.strength_crit = 1.5
@@ -201,6 +205,8 @@ def armor_calculator(attribute, attribute_math, attribute_y):
 
 def set_stats():
     system = sessions[session['key']]
+    system.hero_wins = 0
+    system.enemy_wins = 0
 
     # Hero statistics
     if request.form.get("hero_name") != '':
@@ -625,6 +631,8 @@ def set_stats():
 
 def set_ruleset():
     system = sessions[session['key']]
+    system.hero_wins = 0
+    system.enemy_wins = 0
 
     # Setting all the ruleset rules
 
@@ -953,7 +961,6 @@ def share():
             title = request.form['title']
 
             # I think this could've been done better by concatenating some sort of list of class attributes.
-            # I don't have time to optimize it right now.
 
             cursor.execute('INSERT INTO combat_systems VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
                            '%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,'
@@ -1208,33 +1215,17 @@ def stat_sheet():
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
     system = sessions[session['key']]
-    win_condition = False
+    loops = 1
     combatlog = []
-    turn_number = 0
 
-    hero_health = (system.hero.endurance * system.endurance_value) + system.base_health
-    enemy_health = (system.enemy.endurance * system.endurance_value) + system.base_health
-    hero_speed_base = system.hero.speed
-    enemy_speed_base = system.enemy.speed
-    damage = 0
-    attack_type = 'Default'
-    attack_name = 'Default'
-    hero_charisma_buff = False
-    hero_buff = 0.0
-    enemy_charisma_buff = False
-    enemy_buff = 0.0
-    hero_charisma_debuff = False
-    hero_debuff = 0.0
-    enemy_charisma_debuff = False
-    enemy_debuff = 0.0
-    amount_absorbed = 0
-    critical = False
-    dodged = False
-    absorption = False
+    if request.method == 'POST':
+        if request.form.get('simulate_10', False) == 'x10':
+            loops = 10
+        elif request.form.get('simulate_100', False) == 'x100':
+            loops = 100
+        elif request.form.get('simulate_1000', False) == 'x1000':
+            loops = 1000
 
-    # The following is the most abhorrent piece of code I have ever written.
-    # It came from pilled up decisions that got implemented in HTML
-    # but were not properly thought through in terms of backend.
     def attack_choice(token, damage_input, attack_name_output):
         chance_physical = getattr(getattr(system, token), "likelihood_of_physical")
         physical_damage = getattr(getattr(system, token), "physical_damage")
@@ -1398,140 +1389,168 @@ def simulation():
             absorption_state = True
         return damage_input, absorbed_input, absorption_state
 
-    while not win_condition:
-        turn = ""
-        amount_absorbed = 0
-        if hero_speed_base >= enemy_speed_base:
+    while loops > 0:
+        win_condition = False
+        combatlog.clear()
+        turn_number = 0
 
-            turn_number += 1
-            damage, attack_type, attack_name = attack_choice("hero", damage, attack_name)
+        hero_health = (system.hero.endurance * system.endurance_value) + system.base_health
+        enemy_health = (system.enemy.endurance * system.endurance_value) + system.base_health
+        hero_speed_base = system.hero.speed
+        enemy_speed_base = system.enemy.speed
+        damage = 0
+        attack_type = 'Default'
+        attack_name = 'Default'
+        hero_charisma_buff = False
+        hero_buff = 0.0
+        enemy_charisma_buff = False
+        enemy_buff = 0.0
+        hero_charisma_debuff = False
+        hero_debuff = 0.0
+        enemy_charisma_debuff = False
+        enemy_debuff = 0.0
+        critical = False
+        dodged = False
+        absorption = False
 
-            if hero_charisma_buff:
-                damage *= ((100 + hero_buff) / 100)
-                hero_charisma_buff = False
-            if hero_charisma_debuff:
-                damage *= ((100 - hero_debuff) / 100)
-                hero_charisma_debuff = False
+        loops -= 1
 
-            damage, critical = critical_chance("hero", damage, critical)
-            damage = armor_mitigation("hero", damage)
-            damage, dodged = agility_dodge("hero", damage, dodged)
-            damage, amount_absorbed, absorption = willpower_resistance("hero", damage, amount_absorbed, absorption)
+        while not win_condition:
+            turn = ""
+            amount_absorbed = 0
+            if hero_speed_base >= enemy_speed_base:
 
-            damage = round(damage)
-            enemy_health -= damage
+                turn_number += 1
+                damage, attack_type, attack_name = attack_choice("hero", damage, attack_name)
 
-            turn += '<div class="hero-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="hero-damage">'
-            if dodged:
-                turn += system.hero.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
-                                                                            'class="agility-dodge">dodge the attack!</span> '
-                dodged = False
+                if hero_charisma_buff:
+                    damage *= ((100 + hero_buff) / 100)
+                    hero_charisma_buff = False
+                if hero_charisma_debuff:
+                    damage *= ((100 - hero_debuff) / 100)
+                    hero_charisma_debuff = False
+
+                damage, critical = critical_chance("hero", damage, critical)
+                damage = armor_mitigation("hero", damage)
+                damage, dodged = agility_dodge("hero", damage, dodged)
+                damage, amount_absorbed, absorption = willpower_resistance("hero", damage, amount_absorbed, absorption)
+
+                damage = round(damage)
+                enemy_health -= damage
+
+                turn += '<div class="hero-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="hero-damage">'
+                if dodged:
+                    turn += system.hero.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
+                                                                                'class="agility-dodge">dodge the attack!</span> '
+                    dodged = False
+                else:
+                    if attack_type == 'physical':
+                        turn += system.hero.name + ' strikes with ' + attack_name + ' dealing ' \
+                                                                                    '<span class="physical-damage">' + str(
+                            damage + amount_absorbed) + ' damage!</span>'
+                    else:
+                        turn += system.hero.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
+                            damage + amount_absorbed) + ' damage!</span>'
+
+                    if critical:
+                        turn += '<span class="critical-effect"> Critical strike!</span>'
+                        critical = False
+
+                    if absorption:
+                        turn += '<br>' + system.enemy.name + ' manages to <span class="willpower-absorb">resist ' + str(
+                            amount_absorbed) + '</span> of that damage!'
+                        absorption = False
+
+                if random.randint(1, 100) <= system.hero.charisma_chance:
+                    if random.getrandbits(1) == 1:
+                        hero_buff = random.randint(system.charisma_min, system.charisma_max)
+                        turn += '<br><i class="charisma-effect">' + system.hero.name + " let's out a rallying cry, increasing the power of his next " \
+                                                                                       "attack by " + str(
+                            hero_buff) + '%!</i>'
+                        hero_charisma_buff = True
+                    else:
+                        enemy_debuff = random.randint(system.charisma_min, system.charisma_max)
+                        turn += '<br><i class="charisma-effect">' + system.hero.name + " let's out an intimidating roar, decreasing the power of " \
+                                                                                       "opponent's next attack by " + str(
+                            enemy_debuff) + '%!</i>'
+                        enemy_charisma_debuff = True
+
+                turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health) + "<br>" + \
+                        system.enemy.name + "'s health: " + str(enemy_health + damage) + " (-" + str(damage) + ")" + \
+                        '</span></div><br>'
+                enemy_speed_base += system.enemy.speed
+
             else:
-                if attack_type == 'physical':
-                    turn += system.hero.name + ' strikes with ' + attack_name + ' dealing ' \
-                                                                                '<span class="physical-damage">' + str(
-                        damage + amount_absorbed) + ' damage!</span>'
+
+                turn_number += 1
+                damage, attack_type, attack_name = attack_choice("enemy", damage, attack_name)
+
+                if enemy_charisma_buff:
+                    damage *= ((100 + enemy_buff) / 100)
+                    enemy_charisma_buff = False
+                if enemy_charisma_debuff:
+                    damage *= ((100 - enemy_debuff) / 100)
+                    enemy_charisma_debuff = False
+
+                damage, critical = critical_chance("enemy", damage, critical)
+                damage = armor_mitigation("enemy", damage)
+                damage, dodged = agility_dodge("enemy", damage, dodged)
+                damage, amount_absorbed, absorption = willpower_resistance("enemy", damage, amount_absorbed, absorption)
+
+                damage = round(damage)
+                hero_health -= damage
+
+                turn += '<div class="enemy-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="enemy-damage">'
+                if dodged:
+                    turn += system.enemy.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
+                                                                                 'class="agility-dodge">dodge the attack!</span> '
+                    dodged = False
                 else:
-                    turn += system.hero.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
-                        damage + amount_absorbed) + ' damage!</span>'
+                    if attack_type == 'physical':
+                        turn += system.enemy.name + ' strikes with ' + attack_name + ' dealing ' \
+                                                                                     '<span class="physical-damage">' + str(
+                            damage + amount_absorbed) + ' damage!</span>'
+                    else:
+                        turn += system.enemy.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
+                            damage + amount_absorbed) + ' damage!</span>'
 
-                if critical:
-                    turn += '<span class="critical-effect"> Critical strike!</span>'
-                    critical = False
+                    if critical:
+                        turn += '<span class="critical-effect"> Critical strike!</span>'
+                        critical = False
 
-                if absorption:
-                    turn += '<br>' + system.enemy.name + ' manages to <span class="willpower-absorb">absorb ' + str(
-                        amount_absorbed) + '</span> of that damage!'
-                    absorption = False
+                    if absorption:
+                        turn += '<br>' + system.enemy.name + ' manages to <span class="willpower-absorb"> resist ' + str(
+                            amount_absorbed) + '</span> of that damage!'
+                        absorption = False
 
-            if random.randint(1, 100) <= system.hero.charisma_chance:
-                if random.getrandbits(1) == 1:
-                    hero_buff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<br><i class="charisma-effect">' + system.hero.name + " let's out a rallying cry, increasing the power of his next " \
-                                                                                   "attack by " + str(
-                        hero_buff) + '%!</i>'
-                    hero_charisma_buff = True
-                else:
-                    enemy_debuff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<br><i class="charisma-effect">' + system.hero.name + " let's out an intimidating roar, decreasing the power of " \
-                                                                                   "opponent's next attack by " + str(
-                        enemy_debuff) + '%!</i>'
-                    enemy_charisma_debuff = True
+                if random.randint(1, 100) <= system.enemy.charisma_chance:
+                    if random.getrandbits(1) == 1:
+                        enemy_buff = random.randint(system.charisma_min, system.charisma_max)
+                        turn += '<br><i class="charisma-effect">' + system.enemy.name + " let's out a rallying cry, increasing the power of his next " \
+                                                                                        "attack by " + str(
+                            enemy_buff) + '%!</i>'
+                        enemy_charisma_buff = True
+                    else:
+                        hero_debuff = random.randint(system.charisma_min, system.charisma_max)
+                        turn += '<br><i class="charisma-effect">' + system.enemy.name + " let's out an intimidating roar, decreasing the power of " \
+                                                                                        "opponent's next attack by " + str(
+                            hero_debuff) + '%!</i>'
+                        hero_charisma_debuff = True
 
-            turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health) + "<br>" + \
-                    system.enemy.name + "'s health: " + str(enemy_health + damage) + " (-" + str(damage) + ")" + \
-                    '</span></div><br>'
-            enemy_speed_base += system.enemy.speed
+                turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health + damage) + " (-" + str(
+                    damage) + ")<br>" + system.enemy.name + "'s health: " + str(enemy_health) + '</span></div><br>'
+                hero_speed_base += system.hero.speed
 
-        else:
+            if hero_health <= 0:
+                turn += '<br><div class="enemy-victory">' + system.hero.name + ' has fallen. ' + system.enemy.name + ' has won the battle!</div><br>'
+                system.enemy_wins += 1
+                win_condition = True
+            if enemy_health <= 0:
+                turn += '<br><div class="hero-victory">' + system.enemy.name + ' has fallen. ' + system.hero.name + ' has won the battle!</div><br>'
+                system.hero_wins += 1
+                win_condition = True
 
-            turn_number += 1
-            damage, attack_type, attack_name = attack_choice("enemy", damage, attack_name)
-
-            if enemy_charisma_buff:
-                damage *= ((100 + enemy_buff) / 100)
-                enemy_charisma_buff = False
-            if enemy_charisma_debuff:
-                damage *= ((100 - enemy_debuff) / 100)
-                enemy_charisma_debuff = False
-
-            damage, critical = critical_chance("enemy", damage, critical)
-            damage = armor_mitigation("enemy", damage)
-            damage, dodged = agility_dodge("enemy", damage, dodged)
-            damage, amount_absorbed, absorption = willpower_resistance("enemy", damage, amount_absorbed, absorption)
-
-            damage = round(damage)
-            hero_health -= damage
-
-            turn += '<div class="enemy-turn tooltip">Turn ' + str(turn_number) + ':<br><br><div class="enemy-damage">'
-            if dodged:
-                turn += system.enemy.name + ' strikes with ' + attack_name + ' but the opponent manages to <span ' \
-                                                                             'class="agility-dodge">dodge the attack!</span> '
-                dodged = False
-            else:
-                if attack_type == 'physical':
-                    turn += system.enemy.name + ' strikes with ' + attack_name + ' dealing ' \
-                                                                                 '<span class="physical-damage">' + str(
-                        damage + amount_absorbed) + ' damage!</span>'
-                else:
-                    turn += system.enemy.name + ' casts ' + attack_name + ' dealing <span class="magical-damage">' + str(
-                        damage + amount_absorbed) + ' damage!</span>'
-
-                if critical:
-                    turn += '<span class="critical-effect"> Critical strike!</span>'
-                    critical = False
-
-                if absorption:
-                    turn += '<br>' + system.enemy.name + ' manages to <span class="willpower-absorb"> absorb ' + str(
-                        amount_absorbed) + '</span> of that damage!'
-                    absorption = False
-
-            if random.randint(1, 100) <= system.enemy.charisma_chance:
-                if random.getrandbits(1) == 1:
-                    enemy_buff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<br><i class="charisma-effect">' + system.enemy.name + " let's out a rallying cry, increasing the power of his next " \
-                                                                                    "attack by " + str(
-                        enemy_buff) + '%!</i>'
-                    enemy_charisma_buff = True
-                else:
-                    hero_debuff = random.randint(system.charisma_min, system.charisma_max)
-                    turn += '<br><i class="charisma-effect">' + system.enemy.name + " let's out an intimidating roar, decreasing the power of " \
-                                                                                    "opponent's next attack by " + str(
-                        hero_debuff) + '%!</i>'
-                    hero_charisma_debuff = True
-
-            turn += '</div><br>' + system.hero.name + "'s health: " + str(hero_health + damage) + " (-" + str(
-                damage) + ")<br>" + system.enemy.name + "'s health: " + str(enemy_health) + '</span></div><br>'
-            hero_speed_base += system.hero.speed
-
-        if hero_health <= 0:
-            turn += '<br><div class="enemy-victory">' + system.hero.name + ' has fallen. ' + system.enemy.name + ' has won the battle!</div><br>'
-            win_condition = True
-        if enemy_health <= 0:
-            turn += '<br><div class="hero-victory">' + system.enemy.name + ' has fallen. ' + system.hero.name + ' has won the battle!</div><br>'
-            win_condition = True
-
-        combatlog.append(turn)
+            combatlog.append(turn)
 
     return render_template('simulation.html', system=system, combatlog=combatlog)
 

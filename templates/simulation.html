@@ -20,6 +20,27 @@
     </div>
 
     <div id="simulation-box">
+        <form id="multiple-simulations-box" action="{{ url_for('simulation') }}" method="POST">
+            <div>
+                <input type="submit" name="simulate_10" id="simulate_10" class="simulation-btn" value="x10">
+            </div>
+            <div>
+                <input type="submit" name="simulate_100" id="simulate_100" class="simulation-btn" value="x100">
+            </div>
+            <div>
+                <input type="submit" name="simulate_1000" id="simulate_1000" class="simulation-btn" value="x1000">
+            </div>
+        </form>
+        <div class="wins">
+            {{ system.hero.name }} has won {{ system.hero_wins }} times.<br>
+            {{ system.enemy.name }} has won {{ system.enemy_wins }} times.<br><br>
+            <div class="winratio">
+                Winratio:<br>
+                {{ '%0.2f' | format(((system.hero_wins) / (system.hero_wins + system.enemy_wins) * 100)|float) }}
+                &nbsp;&nbsp;:&nbsp;&nbsp;
+                {{ '%0.2f' | format(((system.enemy_wins) / (system.hero_wins + system.enemy_wins) * 100)|float) }}
+            </div>
+        </div>
         {% for line in combatlog %}
             <div>
                 <p>{{ line|safe }}</p>

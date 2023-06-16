@@ -14,11 +14,11 @@
 </head>
 <body>
     <header>
-        {% if session['loggedin'] == False %}
+        {% if session['loggedin'] == False or session['username'] == '' %}
             <a href="{{ url_for('registration') }}" class="nav-text">Register</a>
             <a href="{{ url_for('login') }}" class="nav-text">Login</a>
         {% else %}
-            <p class="nav-text">{{ session['username'] }}</p>
+            <span class="nav-text">{{ session['username'] }}</span>
             <a href="{{ url_for('share') }}" class="nav-text">Share</a>
             <a href="{{ url_for('browse') }}" class="nav-text">Browse</a>
             <a href="{{ url_for('logout') }}" class="nav-text">Logout</a>

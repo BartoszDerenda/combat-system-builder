@@ -47,7 +47,7 @@ input {
 }
 
 input[type="radio"] {
-    margin: 5px;
+    margin: 13px 0 13px 0;
 }
 
 select {

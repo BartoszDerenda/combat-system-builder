@@ -23,13 +23,15 @@
         <h1>Browse</h1>
         {% for combat_system in database %}
             <div class="combat-system-box">
-                {% if user_type == 'ADMIN' %}
-                    <form action="{{ url_for('browse') }}" method="POST">
+                {% if user_type == 'ADMIN' or combat_system[1] == session['username'] %}
+                    <form action="{{ url_for('browse') }}" class="delete-btn" method="POST">
+                        <h2>{{ combat_system[1] }}</h2><br>
                         <input type="hidden" id="systemId" name="systemId" value="{{ combat_system[0] }}" />
                         <input type="submit" id="delete" name="delete" value="Delete">
                     </form>
+                {% else %}
+                    <h2>{{ combat_system[1] }}</h2><br>
                 {% endif %}
-                <h2>{{ combat_system[1] }}</h2><br>
                 <h1>{{ combat_system[2] }}</h1><br>
                 <div class="description">{{ combat_system[3] }}
                 </div>

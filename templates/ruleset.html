@@ -80,20 +80,20 @@
                 </tr>
                 <tr>
                     <td>
-                        Strength describes the effectiveness of physical attacks.
+                        Strength affects the effectiveness of physical attacks.
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        <label for="strength_dmg">Each point of strength increases physical damage dealt by a value of</label>
+                        <label for="strength_dmg">Each point of strength increases physical damage dealt by a value of&nbsp;</label>
                         <input type="number" id="strength_dmg" name="strength_dmg" value="{{ system.strength_dmg }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="strength_price">Combat value of each point of strength: </label>
-                        <input type="number" id="strength_price" name="strength_price" step="any" value="{{ system.strength_price }}"
+                        <label for="strength_price">Combat value: </label>
+                        <input type="number" id="strength_price" name="strength_price" min="1" step="1" value="{{ system.strength_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -102,20 +102,20 @@
                 </tr>
                 <tr>
                     <td>
-                        Intelligence describes the effectiveness of magical attacks.
+                        Intelligence affects the effectiveness of magical attacks.
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        <label for="intelligence_dmg">Each point of intelligence increases magical damage dealt by a value of</label>
+                        <label for="intelligence_dmg">Each point of intelligence increases magical damage dealt by a value of&nbsp;</label>
                         <input type="number" id="intelligence_dmg" name="intelligence_dmg" value="{{ system.intelligence_dmg }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="intelligence_price">Combat value of each point of intelligence: </label>
-                        <input type="number" id="intelligence_price" name="intelligence_price" step="any" value="{{ system.intelligence_price }}"
+                        <label for="intelligence_price">Combat value: </label>
+                        <input type="number" id="intelligence_price" name="intelligence_price" min="1" step="1" value="{{ system.intelligence_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -164,7 +164,7 @@
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        Choose the mathematical formula that will calculate the dodge chance of a character:
+                        Choose the mathematical formula that will calculate the dodge chance of a fighter:
                     </td>
                 </tr>
                 <tr>
@@ -246,13 +246,13 @@
                         <label for="agility_cap">Maximum achievable dodge chance is </label>
                         <input type="number" id="agility_cap" name="agility_cap" value="{{ system.agility_cap }}"
                         onblur="capCheck(this)" required />
-                        <label for="agility_cap">%, agility points above that limit will not have any effect.</label>
+                        <label for="agility_cap">%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="agility_price">Combat value of each point of agility: </label>
-                        <input type="number" id="agility_price" name="agility_price" step="any" value="{{ system.agility_price }}"
+                        <label for="agility_price">Combat value: </label>
+                        <input type="number" id="agility_price" name="agility_price" min="1" step="1" value="{{ system.agility_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -261,8 +261,8 @@
                 </tr>
                 <tr>
                     <td>
-                        Willpower lets you absorb portion of opponent's attack, lowering the damage taken by certain percentile.
-                        This effects occurs after armor mitigation.
+                        Willpower lets you resist portion of opponent's attack, lowering the damage taken by a percentile.
+                        This effect occurs after armor mitigation.
                     </td>
                 </tr>
                 <tr>
@@ -302,7 +302,7 @@
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        Choose the mathematical formula that will calculate the resistance of a character:
+                        Choose the mathematical formula that will calculate the resistance of a fighter:
                     </td>
                 </tr>
                 <tr>
@@ -384,13 +384,13 @@
                         <label for="willpower_cap">Maximum achievable resistance is </label>
                         <input type="number" id="willpower_cap" name="willpower_cap" value="{{ system.willpower_cap }}"
                         onblur="capCheck(this)" required />
-                        <label for="willpower_cap">%, willpower points above that limit will not have any effect.</label>
+                        <label for="willpower_cap">%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="willpower_price">Combat value of each point of willpower: </label>
-                        <input type="number" id="willpower_price" name="willpower_price" step="any" value="{{ system.willpower_price }}"
+                        <label for="willpower_price">Combat value: </label>
+                        <input type="number" id="willpower_price" name="willpower_price" min="1" step="1" value="{{ system.willpower_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -399,28 +399,28 @@
                 </tr>
                 <tr>
                     <td>
-                        Endurance dictates how much health points a character possesses. When somebody's health points
+                        Endurance describes how many health points a fighter possesses. When fighter's health points
                         reach zero or negative values, they lose the battle.
                     </td>
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        <label for="base_health">Base health of all characters is </label>
+                        <label for="base_health">Base health of all fighters is </label>
                         <input type="number" id="base_health" name="base_health" value="{{ system.base_health }}"
                                onblur="checkInt(this)" min="0" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="endurance_value">Each point of endurance increases character's health pool by </label>
-                        <input type="number" id="endurance_value" name="endurance_value" step="any" value="{{ system.endurance_value }}"
+                        <label for="endurance_value">Each point of endurance increases fighter's health pool by </label>
+                        <input type="number" id="endurance_value" name="endurance_value" min="1" step="1" value="{{ system.endurance_value }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="endurance_price">Combat value of each point of endurance: </label>
-                        <input type="number" id="endurance_price" name="endurance_price" step="any" value="{{ system.endurance_price }}"
+                        <label for="endurance_price">Combat value: </label>
+                        <input type="number" id="endurance_price" name="endurance_price" min="1" step="1" value="{{ system.endurance_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -429,9 +429,8 @@
                 </tr>
                 <tr>
                     <td>
-                        Charisma gives you a chance to increase the damage of your next attack or lower the damage of
-                        your opponent's next hit by a certain percentile. This effect has a chance of occurring at the
-                        end of a turn.
+                        Charisma gives fighters a chance to increase the damage of your next attack or lower the damage of
+                        your opponent's next hit by a percentile. This effect can only occur at the end of a turn.
                     </td>
                 </tr>
                 <tr>
@@ -516,27 +515,27 @@
                 <tr>
                     <td class="small-padding-top">
                         <label for="charisma_min">Charisma effect ranges in strength between </label>
-                        <input type="number" id="charisma_min" name="charisma_min" step="any" value="{{ system.charisma_min }}"
-                               onblur="checkInt(this)" min="1" required />
+                        <input type="number" id="charisma_min" name="charisma_min" min="1" step="1" value="{{ system.charisma_min }}"
+                               onblur="checkInt(this)" required />
                         %
                         <label for="charisma_max">and </label>
-                        <input type="number" id="charisma_max" name="charisma_max" step="any" value="{{ system.charisma_max }}"
-                               onblur="checkInt(this)" min="2" required />
+                        <input type="number" id="charisma_max" name="charisma_max" min="2" step="1" value="{{ system.charisma_max }}"
+                               onblur="checkInt(this)" required />
                         %
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <label for="charisma_cap">Maximum achievable chance for charisma effect to trigger is </label>
-                        <input type="number" id="charisma_cap" name="charisma_cap" step="any" value="{{ system.charisma_cap }}"
+                        <input type="number" id="charisma_cap" name="charisma_cap" min="1" step="1" value="{{ system.charisma_cap }}"
                                onblur="capCheck(this)" required />
-                        <label for="charisma_cap">%, charisma points above that limit will not have any effect.</label>
+                        <label for="charisma_cap">%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="charisma_price">Combat value of each point of charisma: </label>
-                        <input type="number" id="charisma_price" name="charisma_price" step="any" value="{{ system.charisma_price }}"
+                        <label for="charisma_price">Combat value: </label>
+                        <input type="number" id="charisma_price" name="charisma_price" min="1" step="1" value="{{ system.charisma_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -644,16 +643,16 @@
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        <label for="luck_cap">Maximum achievable chance of a critical strike occurring is </label>
-                        <input type="number" id="luck_cap" name="luck_cap" step="any" value="{{ system.luck_cap }}"
+                        <label for="luck_cap">Maximum achievable chance of a critical strike is </label>
+                        <input type="number" id="luck_cap" name="luck_cap" min="1" step="1" value="{{ system.luck_cap }}"
                                onblur="capCheck(this)" required />
-                        <label for="luck_cap">%, luck points above that limit will not have any effect.</label>
+                        <label for="luck_cap">%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="luck_price">Combat value of each point of luck: </label>
-                        <input type="number" id="luck_price" name="luck_price" step="any" value="{{ system.luck_price }}"
+                        <label for="luck_price">Combat value: </label>
+                        <input type="number" id="luck_price" name="luck_price" min="1" step="1" value="{{ system.luck_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -672,7 +671,7 @@
                 </tr>
                 <tr>
                     <td>
-                        $Speed \over Opponent's\;speed$
+                        $Speed \over Opponent's\;speed$<br><br>
                     </td>
                 </tr>
                 <tr>
@@ -683,8 +682,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="speed_price">Combat value of each point of speed: </label>
-                        <input type="number" id="speed_price" name="speed_price" step="any" value="{{ system.speed_price }}"
+                        <label for="speed_price">Combat value: </label>
+                        <input type="number" id="speed_price" name="speed_price" min="1" step="1" value="{{ system.speed_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>
@@ -733,7 +732,7 @@
                 </tr>
                 <tr>
                     <td class="small-padding-top">
-                        Choose the mathematical formula that will calculate the effectiveness of the armor:
+                        Choose the mathematical formula that will calculate the effectiveness of armor:
                     </td>
                 </tr>
                 <tr>
@@ -793,13 +792,13 @@
                         <label for="armor_cap">Maximum achievable armor mitigation is </label>
                         <input type="number" id="armor_cap" name="armor_cap" value="{{ system.armor_cap }}"
                         onblur="capCheck(this)" min="1" required />
-                        <label for="armor_cap">%, armor above that limit will have no effect.</label>
+                        <label for="armor_cap">%</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="armor_price">Combat value of each point of armor: </label>
-                        <input type="number" id="armor_price" name="armor_price" step="any" value="{{ system.armor_price }}"
+                        <label for="armor_price">Combat value: </label>
+                        <input type="number" id="armor_price" name="armor_price" min="1" step="1" value="{{ system.armor_price }}"
                                onblur="checkInt(this)" required />
                     </td>
                 </tr>

@@ -6,7 +6,14 @@
 }
 
 .combat-system-box {
+    display: flex;
+    flex-direction: column;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    hyphens: auto;
+
     min-width: 90vw;
+    max-width: 90vw;
     height: 100%;
     background-color: #33385b;
     margin-bottom: 25px;
@@ -24,13 +31,24 @@ input[type=submit] {
     background-color: #4c5a9b;
 }
 
-input[type=submit]:hover {
+#confirm:hover {
     transition: 0.2s;
     background-color: #6872af;
 }
 
+.delete-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 #delete {
     background-color: #663b3c;
+}
+
+#delete:hover {
+    transition: 0.2s;
+    background-color: #864c4d;
 }
 
 h1 {
